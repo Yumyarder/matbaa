@@ -1,0 +1,11 @@
+# Cloudflare Pages: the site (site/) and its counter (functions/api/sayac.js
+# with the D1 database below), published with `wrangler pages deploy` from
+# this folder (docs/YAYIN.md). A database id is an address, not a secret.
+name = "matbaa"
+pages_build_output_dir = "site"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "matbaa-sayac"
+database_id = "390d1122-5b19-4e33-8357-054f6709f84b"

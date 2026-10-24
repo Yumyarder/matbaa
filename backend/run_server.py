@@ -30,10 +30,10 @@ OPEN_BROWSER = not os.environ.get("MATBAA_NO_BROWSER")
 # and adds each book, by genre alone, to the site's counter (app/counter.py);
 # development servers and the tests never go online.
 os.environ.setdefault("MATBAA_ONLINE", "1")
-# The published site's counter, e.g. "https://matbaa.pages.dev/api/sayac".
-# Empty until the site exists under that name (docs/YAYIN.md): a pages.dev
-# name nobody has claimed yet could be claimed by anyone.
-COUNTER_URL = ""
+# The published site's counter (docs/YAYIN.md). It stays empty in a copy
+# whose site does not exist yet: a pages.dev name nobody has claimed could
+# be claimed by anyone.
+COUNTER_URL = "https://matbaa.pages.dev/api/sayac"
 if COUNTER_URL:
     os.environ.setdefault("MATBAA_COUNTER_URL", COUNTER_URL)
 
