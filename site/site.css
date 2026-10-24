@@ -105,6 +105,57 @@ a:hover { color: var(--red-deep); }
 .tally__bar { display: block; width: 6rem; height: 3px; background: var(--rule); }
 .tally__bar span { display: block; height: 100%; background: var(--red); }
 .tally__latest { margin: 0.75rem 0 0; font-size: 0.875rem; font-style: italic; color: var(--ink-2); }
+.tally__count:disabled { cursor: default; }
+.tally__count:disabled .tally__toggle { display: none; }
+.tally__shelf { display: inline-block; margin-top: 0.75rem; font-size: 0.9375rem; }
+.tally__latest + .tally__shelf { margin-top: 0.5rem; }
+
+/* the shelf (dizilenler.html): a cloth spine a book on a board */
+.raf { padding-top: 3rem; padding-bottom: 4rem; }
+.raf__lead { display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap; }
+.raf__n { margin: 0; font-size: 6rem; line-height: 1; font-variant-numeric: oldstyle-nums proportional-nums; }
+.raf__line { margin: 0; font-size: 1.5rem; font-style: italic; line-height: 1.3; color: var(--ink-2); }
+.raf__empty, .raf__error { margin: 2rem 0 0; font-size: 1.1875rem; }
+.raf__error { font-style: italic; color: var(--ink-2); }
+.raf__filled[hidden], .raf__empty[hidden], .raf__error[hidden] { display: none; }
+.raf__shelf { margin-top: 3rem; }
+.raf__spines { display: flex; flex-direction: column; gap: 2.25rem; }
+.raf__row { position: relative; display: flex; align-items: flex-end; gap: 0.3rem; padding: 0 0.25rem 6px; }
+.raf__row::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: #343332;
+  box-shadow: 0 5px 8px -4px rgba(46, 32, 16, 0.4); }
+.raf__more { margin: 0.75rem 0 0; font-style: italic; color: var(--ink-2); }
+.spine { position: relative; display: inline-block; width: 1.5rem; height: 11rem; background: var(--cloth);
+  border-radius: 1px 2px 0 0;
+  background-image: linear-gradient(90deg, rgba(0,0,0,.24) 0, rgba(0,0,0,.08) 2px, rgba(255,255,255,.12) 4px, rgba(255,255,255,0) 7px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px);
+  box-shadow: 1px 0 0 rgba(0,0,0,.08); }
+.spine__band { position: absolute; left: 3px; right: 3px; top: 16%; height: 0.7rem; background: var(--band); }
+.spine::after { content: ""; position: absolute; left: 50%; bottom: 14%; width: 9px; height: 9px; margin-left: -4px;
+  background: linear-gradient(var(--mark, #c23a2a), var(--mark, #c23a2a)) center / 100% 1px no-repeat,
+              linear-gradient(var(--mark, #c23a2a), var(--mark, #c23a2a)) center / 1px 100% no-repeat; }
+.spine--bone { --cloth: #d8c9ad; } .spine--iron { --cloth: #343332; }
+.spine--rubric { --cloth: #a63829; --mark: #2a1714; } .spine--chalk { --cloth: #ece6da; box-shadow: inset 0 0 0 1px rgba(26,26,26,.14); }
+.band--red { --band: #c23a2a; } .band--bone { --band: #d8c9ad; } .band--iron { --band: #343332; }
+.band--chalk { --band: #f3eee3; } .band--rubric { --band: #a63829; }
+.raf__legend { list-style: none; margin: 2rem 0 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0.75rem 2rem; }
+.raf__key { display: flex; align-items: center; gap: 0.75rem; }
+.spine--swatch { width: 0.85rem; height: 2rem; }
+.spine--swatch::after { display: none; }
+.spine--swatch .spine__band { left: 2px; right: 2px; top: 22%; height: 0.35rem; }
+.raf__key-name { flex: 1; }
+.raf__key-n { color: var(--ink-2); font-variant-numeric: lining-nums tabular-nums; }
+.raf__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem 3rem; margin-top: 3rem;
+  padding-top: 2rem; border-top: 1px solid var(--rule); }
+.raf__cols h2 { margin: 0 0 1rem; font-size: 1.5rem; font-weight: 400; }
+.raf__recent { list-style: none; margin: 0; padding: 0; }
+.raf__recent li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.35rem 0;
+  border-bottom: 1px solid var(--rule); }
+.raf__recent-when { font-style: italic; color: var(--ink-2); }
+@media (max-width: 860px) {
+  .raf__n { font-size: 4rem; }
+  .raf__cols { grid-template-columns: 1fr; }
+}
 
 .shelf { display: flex; justify-content: center; align-items: flex-end; gap: 1.75rem; padding: 1rem 0; }
 .tome { position: relative; width: 8rem; aspect-ratio: 2 / 3; border-radius: 1px 4px 4px 1px; background-color: var(--cloth);

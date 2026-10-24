@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dizilenler — Matbaa</title>
+  <meta name="description" content="Matbaa'nın bugüne dek dizdiği kitaplar, türlerine göre: her kitap rafta bir sırt.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <header class="head">
+    <div class="wrap">
+      <a class="mark" href="./"><span class="mark__name">Matbaa</span><span class="cross" aria-hidden="true"></span><span class="mark__motto">PDF'ten Kindle'a</span></a>
+      <nav class="nav caps" aria-label="Bölümler">
+        <a href="./#nasil">Nasıl çalışır</a>
+        <a href="./#indir">İndir</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap raf" id="raf">
+    <section class="raf__lead">
+      <p class="raf__n">0</p>
+      <p class="raf__line">kitap bu tezgâhtan çıktı;<br>her biri rafta bir sırt.</p>
+    </section>
+
+    <p class="raf__empty" hidden>Henüz kitap dizilmedi. İlk kitabı sen diz:
+      <a href="./#indir">Matbaa'yı indir</a>.</p>
+    <p class="raf__error" hidden>Sayaç şu an okunamadı; biraz sonra yeniden deneyin.</p>
+
+    <div class="raf__filled" hidden>
+      <div class="raf__shelf">
+        <div class="raf__spines"></div>
+        <p class="raf__more"></p>
+      </div>
+      <ul class="raf__legend" aria-label="Renklerin türleri"></ul>
+
+      <div class="raf__cols">
+        <section>
+          <h2>Türlerine göre</h2>
+          <ol class="tally__rows"></ol>
+        </section>
+        <section>
+          <h2>Son dizilenler</h2>
+          <ol class="raf__recent"></ol>
+          <p class="note">Sayaçta yalnız kitabın türü ve dizildiği saat tutulur; kitabın adı, dizen kişi ya da adresi
+            tutulmaz.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <nav aria-label="Site">
+        <a href="gizlilik.html">Gizlilik</a>
+        <a href="kosullar.html">Kullanım koşulları</a>
+        <a href="lisanslar.html">Lisanslar ve atıflar</a>
+        <a href="https://github.com/Yumyarder/matbaa">Kaynak kodu</a>
+      </nav>
+      <p>Kindle ve Amazon, Amazon.com, Inc. ya da bağlı şirketlerinin; Obsidian, Dynalist Inc.'in markasıdır.
+        Matbaa bu şirketlerle ilişkili değildir.</p>
+    </div>
+  </footer>
+</body>
+</html>

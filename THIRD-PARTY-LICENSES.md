@@ -13,14 +13,14 @@ PDF motoru (PyMuPDF) ve EPUB kitaplığı (EbookLib) bu lisansla gelir. Ayrınt�
 |---|---|---|
 | PyMuPDF, PyMuPDFb (Artifex Software) | 1.24.5 | GNU AGPL-3.0 |
 | EbookLib (Aleksandar Erkalović) | 0.18 | GNU AGPL-3.0 |
-| FastAPI | 0.111.0 | MIT |
-| Starlette | 0.37.2 | BSD-3-Clause |
-| Uvicorn | 0.30.1 | BSD-3-Clause |
-| Pydantic, pydantic-core | 2.7.4, 2.18.4 | MIT |
-| python-multipart | 0.0.9 | Apache-2.0 |
-| Pillow | 10.4.0 | HPND |
+| FastAPI | 0.162.0 | MIT |
+| Starlette | 1.10.0 | BSD-3-Clause |
+| Uvicorn | 0.54.0 | BSD-3-Clause |
+| Pydantic, pydantic-core | 2.14.1, 2.50.1 | MIT |
+| python-multipart | 0.0.32 | Apache-2.0 |
+| Pillow | 13.0.0 | HPND |
 | pytesseract | 0.3.13 | Apache-2.0 |
-| fontTools | 4.55.3 | MIT |
+| fontTools | 4.67.0 | MIT |
 | keyring | 25.6.0 | MIT |
 | lxml | 6.1.1 | BSD-3-Clause |
 | anyio, h11, httptools | — | MIT |
@@ -29,7 +29,7 @@ PDF motoru (PyMuPDF) ve EPUB kitaplığı (EbookLib) bu lisansla gelir. Ayrınt�
 | Pygments | 2.20.0 | BSD-2-Clause |
 | packaging | 26.2 | Apache-2.0 ya da BSD-2-Clause |
 | orjson | 3.11.9 | MPL-2.0 ve (Apache-2.0 ya da MIT) |
-| certifi | 2026.7.22 | MPL-2.0 |
+| certifi | 2026.10.23 | MPL-2.0 |
 | dnspython, shellingham | — | ISC |
 | email-validator | 2.3.0 | Unlicense |
 | typing-extensions | 4.16.0 | PSF-2.0 |

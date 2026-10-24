@@ -226,6 +226,8 @@ os.environ.pop("MATBAA_ONLINE", None)
 check(f"the reader's app asks Wikidata: {s.get('genre')} ({s.get('genre_reason')})",
       s.get("genre") == "siyaset" and s.get("genre_source") == "wikidata")
 check("with the title and the author only", set(asked) == {"Devlet ve Devrim", "V. İ. Lenin"})
+check("the book's report says what it was taken for, and from where",
+      any(line.startswith("Tür: Siyaset (Wikidata") for line in (s.get("report") or {}).get("strategy", [])))
 r = client.put(f"/api/session/{s['session_id']}/meta", json={"genre": "felsefe"}).json()
 check("the reader's choice wins", r.get("genre") == "felsefe" and r.get("genre_source") == "reader")
 check("a genre Matbaa does not know is refused",
@@ -236,6 +238,18 @@ epub = client.post(f"/api/session/{s['session_id']}/export")
 with zipfile.ZipFile(__import__("io").BytesIO(epub.content)) as z:
     opf = next(z.read(n).decode("utf-8") for n in z.namelist() if n.endswith(".opf"))
 check("the EPUB carries it as dc:subject", "<dc:subject>Felsefe</dc:subject>" in opf)
+import time  # noqa: E402
+
+kept = main.get_session(s["session_id"])
+kept.genre = None
+main.save_session(kept)
+with TestClient(main.app):
+    for _ in range(100):
+        if main.get_session(s["session_id"]).genre:
+            break
+        time.sleep(0.1)
+check("a book kept without a genre gets one when the app starts",
+      main.get_session(s["session_id"]).genre == "siyaset")
 
 server.shutdown()
 genre_lookup.WIKIDATA = "http://127.0.0.1:9/w/api.php"

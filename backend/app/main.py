@@ -7,6 +7,7 @@ import sys
 import tempfile
 import threading
 import uuid
+from contextlib import asynccontextmanager
 from typing import Optional
 
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
@@ -68,7 +69,14 @@ def resource_path(relative_path: str) -> str:
     return os.path.join(base_path, relative_path)
 
 
-app = FastAPI(title="Matbaa — Academic PDF -> Kindle EPUB Converter")
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    # books converted before genres existed get theirs in the background
+    threading.Thread(target=_fill_genres, daemon=True).start()
+    yield
+
+
+app = FastAPI(title="Matbaa — Academic PDF -> Kindle EPUB Converter", lifespan=_lifespan)
 
 _DEV_ORIGINS = {"http://localhost:5173", "http://127.0.0.1:5173"}
 
@@ -493,6 +501,9 @@ def _guess_genre(session: ConversionSession, pdf_path: str) -> None:
         found = book_genre.decide(local, online)
         session.genre, session.genre_reason = found.key, found.reason
         session.genre_source = "wikidata" if online is not None and found.reason == online.reason else "auto"
+        if session.report is not None:
+            where = found.reason if session.genre_source == "wikidata" else f"kitabın kendisinden; {found.reason}"
+            session.report.setdefault("strategy", []).append(f"Tür: {found.label} ({where}). Tezgâhta değiştirilebilir.")
     except Exception:  # noqa: BLE001
         session.genre, session.genre_source, session.genre_reason = "diger", "auto", None
 
@@ -513,11 +524,6 @@ def _fill_genres() -> None:
         save_session(session)
         if os.environ.get("MATBAA_ONLINE"):
             time.sleep(1)
-
-
-@app.on_event("startup")
-def _background_fills() -> None:
-    threading.Thread(target=_fill_genres, daemon=True).start()
 
 
 def _book_report(result, pdf_path: str, upload_id: str) -> Optional[dict]:
