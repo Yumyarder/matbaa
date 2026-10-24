@@ -1,0 +1,11 @@
+# Cloudflare Pages: security headers for every page. The site loads only
+# its own files: its stylesheet, fonts, and one script of its own (site.js,
+# the counter) that reads only /api/sayac on this same site.
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin

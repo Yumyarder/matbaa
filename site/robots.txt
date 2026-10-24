@@ -1,0 +1,3 @@
+# While Matbaa is open to invited friends only, nothing here is for search engines.
+User-agent: *
+Disallow: /

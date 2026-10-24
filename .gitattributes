@@ -1,0 +1,2 @@
+# kept out of a package given to someone else (tools/make_share_package.py)
+tools/qa/baselines/library.json export-ignore

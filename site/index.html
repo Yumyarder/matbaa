@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matbaa — PDF'ten Kindle'a</title>
+  <meta name="description" content="Matbaa, PDF kitaplarınızı Kindle'da düzgün okunan EPUB'lara dizer; Kindle'da altını çizdiklerinizi Obsidian kasanıza taşır. Ücretsiz ve açık kaynak.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <header class="head">
+    <div class="wrap">
+      <a class="mark" href="./">
+        <span class="mark__name">Matbaa</span><span class="cross" aria-hidden="true"></span><span class="mark__motto">PDF'ten Kindle'a</span>
+      </a>
+      <nav class="nav caps" aria-label="Bölümler">
+        <a href="#nasil">Nasıl çalışır</a>
+        <a href="#indir">İndir</a>
+        <a href="lisanslar.html">Lisanslar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <h1>Kitaplarınızı Kindle'a dizin.</h1>
+        <span class="rule" aria-hidden="true"></span>
+        <p>Matbaa, PDF kitaplarınızı Kindle'da düzgün okunan EPUB'lara dizer: bölümler, dipnotlar, içindekiler ve
+          basılı sayfa numaraları yerli yerinde. Kindle'da altını çizdiklerinizi de, kitaptaki sayfalarıyla,
+          Obsidian kasanıza taşır.</p>
+        <div class="actions">
+          <a class="btn btn--primary caps" href="#indir">Windows için indir</a>
+          <a class="btn caps" href="#nasil">Nasıl çalışır</a>
+        </div>
+        <p class="hint">Ücretsiz ve açık kaynak. Verileriniz kendi bilgisayarınızda kalır.</p>
+        <section class="tally" id="sayac" aria-label="Dizilen kitaplar" hidden>
+          <button type="button" class="tally__count" aria-expanded="false" aria-controls="sayac-defter">
+            <span class="tally__n">0</span>
+            <span class="tally__unit">kitap dizildi</span>
+            <span class="cross tally__toggle" aria-hidden="true"></span>
+          </button>
+          <div class="tally__ledger" id="sayac-defter" hidden>
+            <ol class="tally__rows"></ol>
+            <p class="tally__latest"></p>
+          </div>
+        </section>
+      </div>
+      <div class="shelf" aria-hidden="true">
+        <span class="tome tome--bone"><span class="tome__label">Kürk Mantolu Madonna</span></span>
+        <span class="tome tome--rubric"><span class="tome__label">Suç ve Ceza</span></span>
+        <span class="tome tome--iron"><span class="tome__label">Sefiller</span></span>
+      </div>
+    </section>
+
+    <section class="section" id="nasil">
+      <p class="label caps">Nasıl çalışır</p>
+      <h2>Üç adımda bir PDF, Kindle'da bir kitap olur.</h2>
+      <ol class="steps">
+        <li>
+          <h3>PDF'i bırakın</h3>
+          <p>Matbaa sayfaları tanır: metin, görsel, içindekiler. Taranmış sayfaları da okur (Türkçe OCR).
+            Emin olamadığı sayfaları size gösterir.</p>
+        </li>
+        <li>
+          <h3>Tezgâhta gözden geçirin</h3>
+          <p>Bölümleri, başlıkları, dipnotları ve metni düzeltin; her bölümü Kindle'da nasıl görüneceğiyle yan yana
+            görün. Kitap raporu, emin olamadığı yerleri paragrafın yanında gösterir.</p>
+        </li>
+        <li>
+          <h3>Kindle'a gönderin</h3>
+          <p>EPUB'u indirin ya da Kindle'a e-postayla gönderin. Kitap Kindle'ın kendi yazı tipleriyle, basılı sayfa
+            numaralarıyla açılır.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section">
+      <p class="label caps">Okuma Defteri</p>
+      <h2>Okuduğunuz, notlarınızla birlikte kasanıza gelir.</h2>
+      <div class="cols">
+        <div>
+          <h3>Vurgular ve notlar</h3>
+          <p>Kindle'ı bilgisayara bağlayın: altını çizdiğiniz yerler, notlarınız ve sorularınız kitaptaki sayfalarıyla
+            Obsidian notlarınıza yazılır. Yazmadan önce ne değişeceğini görürsünüz.</p>
+        </div>
+        <div>
+          <h3>Kelime Defteri ve Türkçe sözlük</h3>
+          <p>Kindle'da baktığınız kelimeler, geçtikleri cümleyle bir deftere toplanır. Matbaa Kindle'a bir Türkçe
+            sözlük de koyar (Vikisözlük verisinden).</p>
+        </div>
+      </div>
+      <p class="note">Matbaa kopya korumasını (DRM) kırmaz. Yalnız hakkına sahip olduğunuz kitapları dönüştürün.</p>
+    </section>
+
+    <section class="section" id="indir">
+      <p class="label caps">İndir</p>
+      <h2>Windows için Matbaa.</h2>
+      <div class="cols">
+        <div>
+          <h3>Kurulum</h3>
+          <p>Matbaa.exe'yi indirip açın; tarayıcınızda kendiliğinden açılır. Windows "bilinmeyen yayıncı" uyarısı
+            verirse <em>Daha fazla bilgi</em> ve ardından <em>Yine de çalıştır</em> deyin.</p>
+          <div class="actions">
+            <a class="btn btn--primary caps" aria-disabled="true">İndirme yakında</a>
+          </div>
+        </div>
+        <div>
+          <h3>İsteğe bağlı</h3>
+          <p>Taranmış kitaplar için Tesseract OCR (Türkçe dil paketiyle); Kindle'a Türkçe sözlük koymak için
+            Amazon'un ücretsiz Kindle Previewer'ı. Matbaa ikisini de kendisi bulur.</p>
+        </div>
+      </div>
+      <p class="note">Matbaa her şeyi kendi bilgisayarınızda yapar. Kitaplarınız, notlarınız ve ayarlarınız hiçbir
+        sunucuya gitmez.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <nav aria-label="Site">
+        <a href="gizlilik.html">Gizlilik</a>
+        <a href="kosullar.html">Kullanım koşulları</a>
+        <a href="lisanslar.html">Lisanslar ve atıflar</a>
+        <a href="https://github.com/Yumyarder/matbaa">Kaynak kodu</a>
+      </nav>
+      <p>Kindle ve Amazon, Amazon.com, Inc. ya da bağlı şirketlerinin; Obsidian, Dynalist Inc.'in markasıdır.
+        Matbaa bu şirketlerle ilişkili değildir.</p>
+    </div>
+  </footer>
+</body>
+</html>

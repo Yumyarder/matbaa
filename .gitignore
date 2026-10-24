@@ -1,0 +1,53 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node / frontend ---
+node_modules/
+.vite/
+
+# --- Generated build output ---
+# All of these are reproduced by Matbaa.bat / npm run build / build_exe.bat.
+dist/
+build/
+backend/app/frontend_dist/
+*.spec.bak
+
+# --- Matbaa working artifacts ---
+# Baseline conversion runs, unzipped EPUBs, rendered page images, scratch
+# analysis output.
+.matbaa-work/
+*.epub
+
+# --- Regression corpus binaries ---
+# The corpus books are permanent project evidence, but they are copyrighted
+# and large, so the files themselves stay out of git. What gets tracked is
+# the registry (tools/qa/corpus.py) and the measured baselines
+# (tools/qa/baselines/) — which is what regression checking actually needs.
+# test-corpus/README.md lists exactly which files have to be present.
+test-corpus/*.pdf
+test-corpus/*.epub
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.log
+
+# --- Machine-local Claude Code settings (proxy URL, hooks, wrap markers) ---
+.claude/settings.local.json
+.claude/.headroom_wrap_*
+
+# --- Design tooling scratch (impeccable) ---
+# The surface brief (.impeccable/surfaces/) is kept; the detector cache and
+# the decision-page logs are per session.
+frontend/.impeccable/hook.cache.json
+frontend/.impeccable/questions/

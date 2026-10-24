@@ -1,0 +1,17 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+PyMuPDF==1.24.5
+EbookLib==0.18
+pydantic==2.7.4
+python-multipart==0.0.9
+# --- PDF Editor "Bölgesel OCR" tool ---
+# These are the Python wrapper only. You ALSO need the Tesseract OCR
+# system binary installed separately (not a pip package) — see app/ocr.py
+# for install instructions per OS, and make sure to install the Turkish
+# ("tur") language pack specifically.
+pytesseract==0.3.13
+Pillow==10.4.0
+# --- Send to Kindle: the SMTP app password goes to the OS credential store ---
+keyring==25.6.0
+# --- embedded typeface: Literata cut to each book's letters (app/fonts.py) ---
+fonttools==4.55.3
