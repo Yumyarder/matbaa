@@ -66,6 +66,13 @@ Bunun dışında internete yalnız siz bir şeye tıkladığınızda çıkar:
 
 ## Kurulum
 
+### Tarayıcıda, kurulumsuz
+
+[matbaa.pages.dev](https://matbaa.pages.dev)'de **Tarayıcıda başlayın**: Matbaa'nın aynı motoru tarayıcınızın içinde
+çalışır (Pyodide, WebAssembly). İlk açılışta yaklaşık 30 MB iner ve tarayıcıda saklanır; kitaplarınız o
+tarayıcının deposunda kalır, hiçbir sunucuya yüklenmez. Taranmış sayfaların OCR'ı, Kindle'ı kabloyla bağlamak,
+Obsidian'a yazmak ve e-postayla göndermek yalnız Windows programında.
+
 ### Hazır program (Windows)
 
 1. Sürümler (Releases) sayfasından `Matbaa.exe`'yi indirin.
@@ -107,6 +114,19 @@ npm run dev
 ```
 
 `http://localhost:5173` adresini açın; arayüz `/api` isteklerini 8000'deki sunucuya iletir.
+
+### Tarayıcı sürümünü derlemek
+
+`Matbaa.bat`'ı bir kez çalıştırdıktan sonra:
+
+```bat
+backend\.venv\Scripts\python tools\build_browser.py
+backend\.venv\Scripts\python tools\dev_site.py
+```
+
+Sonuç `site\uygulama\` klasörüne gelir; `http://127.0.0.1:8790/uygulama/` adresinde denenir. Pyodide'ın
+dosyaları ve PyMuPDF'in WebAssembly sürümü ilk derlemede indirilir ve her biri betikte sabitlenmiş SHA-256
+özetiyle denetlenir.
 
 ### `Matbaa.exe`'yi kendiniz derlemek
 

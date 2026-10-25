@@ -59,7 +59,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Callable, Dict, Iterable, List, Optional, Set, Tuple
 
-import fitz  # PyMuPDF
+import pymupdf as fitz  # PyMuPDF
 
 from difflib import SequenceMatcher
 
@@ -890,6 +890,12 @@ INSERTED_SPACE_FIT_EM = 0.02
 # real (if squeezed) one at 0.928 was the closest genuine case, so the cut
 # sits between them.
 INSERTED_SPACE_NARROWER = 0.92
+# A letter that begins this far (in em) before the previous letter ends sits
+# on top of it: there is no room for a space between them. Measured: the
+# spaces newer PyMuPDF invents inside a ligature ("Th ompson") have the next
+# letter 0.25–0.53 em inside the previous one; a real space never has it
+# inside at all.
+LIGATURE_OVERLAP_EM = 0.1
 SPACE_MODE_TOLERANCE = 0.02
 SPACE_MODE_MIN_SHARE = 0.6
 SPACE_MODE_MIN_COUNT = 30
@@ -958,8 +964,15 @@ def _is_inserted_space(chars: List[dict], i: int, size: float, usual_em: Optiona
     both sides: next to punctuation ("- The", "Bayer ©") a real space can
     coincide by chance, and keeping a stray space there costs far less than
     gluing two words.
+
+    Newer PyMuPDF (1.26 on) also invents one inside a ligature: the "Th"
+    glyph of Minion is split into T and h, and a space put back between h
+    and the next letter, which begins where h begins. Every viewer shows
+    "Thompson"; PyMuPDF said "Th ompson". Such a space lies before the letter
+    it follows, and the next letter overlaps that letter: dropped whatever
+    the font's space width.
     """
-    if not size or not usual_em:
+    if not size:
         return False
     j = i - 1
     while j >= 0 and chars[j].get("c", "").isspace():
@@ -971,6 +984,11 @@ def _is_inserted_space(chars: List[dict], i: int, size: float, usual_em: Optiona
         return False
     prev_c, next_c = chars[j].get("c", ""), chars[k].get("c", "")
     if not (prev_c.isalnum() and next_c.isalnum()):
+        return False
+    pb, nb = chars[j]["bbox"], chars[k]["bbox"]
+    if chars[i]["bbox"][0] < pb[0] and nb[0] < pb[2] - LIGATURE_OVERLAP_EM * size:
+        return True
+    if not usual_em:
         return False
     # A lowercase letter followed by a capital is a word boundary in running
     # text ("ailesi Japonya"); the invented spaces sit the other way round
@@ -1158,6 +1176,13 @@ def _same_baseline(a: dict, b: dict) -> bool:
     return abs(sa[0]["origin"][1] - sb[0]["origin"][1]) <= max(2.0, 0.4 * size)
 
 
+def _bare_number_line(line: dict) -> bool:
+    text = "".join(c.get("c", "") for s in line.get("spans", []) for c in s.get("chars", []))
+    if not text and line.get("spans"):
+        text = "".join(s.get("text", "") for s in line["spans"])
+    return text.strip().isdigit()
+
+
 def _merge_baseline_fragments(lines: List[dict], body_size: float) -> List[dict]:
     """Rejoin one printed line that PyMuPDF handed back in several pieces.
 
@@ -1194,8 +1219,17 @@ def _merge_baseline_fragments(lines: List[dict], body_size: float) -> List[dict]
             # starts back at the margin is the next line, however much the
             # boxes overlap: a scan reported boxes 150pt tall on a contents
             # page, and every entry from "Adım 1" to "Adım 10" became one line.
-            if (_same_visual_line(group["bbox"], bbox)
-                    and bbox[0] - group["bbox"][2] <= max_gap
+            # Two bare numbers apart on one row are not one line, whichever
+            # the boxes' tops put first: a plate's "5" and "6", one over each
+            # caption, merged into "5 6" on PyMuPDF 1.28 and lost both.
+            gb = group["bbox"]
+            numbers_apart = (
+                _bare_number_line(ln) and all(_bare_number_line(g) for g in group["lines"])
+                and max(bbox[0] - gb[2], gb[0] - bbox[2]) > max_gap
+            )
+            if (_same_visual_line(gb, bbox)
+                    and bbox[0] - gb[2] <= max_gap
+                    and not numbers_apart
                     and _same_baseline(group["lines"][0], ln)):
                 group["lines"].append(ln)
                 gb = group["bbox"]
@@ -1248,20 +1282,74 @@ def _join_line_pieces(pieces: List[tuple]) -> str:
     return out
 
 
+def _split_apart_lines(lines: List[dict]) -> List[List[dict]]:
+    """Split a block whose lines belong to separate columns.
+
+    Lines of one paragraph or one column share some of their width. PyMuPDF
+    1.26 and later can hand back a block holding a line from another column
+    as well: on a plate page the "2" over the right-hand caption came first
+    in the block of the left-hand caption, and that caption opened "2
+    Mimarlığa bir göz sanatı…". So a block's lines are grouped by shared
+    width or shared height (a contents entry and its page number, a list's
+    number and its text, a raised note mark) — but two bare numbers side by
+    side are the numbers of two columns (a plate's "5" and "6") — and a
+    group that shares neither with the rest becomes a block of its own.
+
+    Only a whole group stands apart, never a line that merely misses the
+    next one: a paragraph's short last line and the indented line after it
+    can miss each other, and cutting there split notes and paragraphs on
+    scanned books (measured: Feuerbach's notes 22 -> 42).
+    """
+    boxes = [ln.get("bbox") for ln in lines]
+    if len(lines) < 2 or not all(boxes):
+        return [lines]
+    bare_number = [_bare_number_line(ln) for ln in lines]
+    group = list(range(len(lines)))
+
+    def root(i: int) -> int:
+        while group[i] != i:
+            group[i] = group[group[i]]
+            i = group[i]
+        return i
+
+    for i in range(len(lines)):
+        for j in range(i + 1, len(lines)):
+            a, b = boxes[i], boxes[j]
+            shared_width = a[0] <= b[2] and b[0] <= a[2]
+            # any shared height: a note's raised "*" past the margin stays
+            # with its line ("terapötik"* in Stavrides)
+            shared_height = min(a[3], b[3]) > max(a[1], b[1])
+            if shared_width or (shared_height and not (bare_number[i] and bare_number[j])):
+                group[root(i)] = root(j)
+    parts: Dict[int, List[dict]] = {}
+    for i, ln in enumerate(lines):
+        parts.setdefault(root(i), []).append(ln)
+    return list(parts.values())
+
+
 def _extract_page_blocks(page: fitz.Page, page_num: int, body_size: float) -> List[RawBlock]:
     d = page.get_text("rawdict")
     ph, pw = page.rect.height, page.rect.width
     space_profile = _space_profile(page.parent)
     out: List[RawBlock] = []
+    # Before anything reads a line's geometry, make each record be one real
+    # printed line (_merge_baseline_fragments) and each block hold lines of
+    # one column (_split_apart_lines).
+    blocks: List[dict] = []
     for block in d.get("blocks", []):
-        if block.get("type") != 0:
+        if block.get("type") != 0 or not block.get("lines"):
             continue
-        lines = block.get("lines", [])
-        if not lines:
+        parts = _split_apart_lines(_merge_baseline_fragments(block["lines"], body_size))
+        if len(parts) == 1:
+            blocks.append({"bbox": block["bbox"], "lines": parts[0]})
             continue
-        # Before anything reads a line's geometry, make each record be one
-        # real printed line — see _merge_baseline_fragments.
-        lines = _merge_baseline_fragments(lines, body_size)
+        for part in parts:
+            boxes = [ln["bbox"] for ln in part if ln.get("bbox")]
+            bbox = (min(b[0] for b in boxes), min(b[1] for b in boxes),
+                    max(b[2] for b in boxes), max(b[3] for b in boxes)) if boxes else block["bbox"]
+            blocks.append({"bbox": bbox, "lines": part})
+    for block in blocks:
+        lines = block["lines"]
 
         # First pass: reconstruct every line's text plus its left/right edge.
         line_records: List[dict] = []
@@ -1438,6 +1526,37 @@ def _extract_page_blocks(page: fitz.Page, page_num: int, body_size: float) -> Li
     return _reading_order(out)
 
 
+# On a contents page a gap this many type sizes wide, within one row,
+# separates an entry from its page number.
+TOC_ROW_GAP_EM = 3.0
+
+
+def _toc_row_pieces(line: dict) -> List[dict]:
+    """A contents row as its entry and its page number when they lie far apart.
+
+    Whether PyMuPDF hands them back as one line depends on half a point in
+    their boxes (on 1.28 "Bedensel Özdeşleşme ... 80" came as one line, as two
+    on 1.24), and as one line a two-word title loses its number: a trailing
+    number is read off a title only after three words.
+    """
+    spans = [s for s in line.get("spans", []) if s.get("bbox")]
+    if len(spans) < 2:
+        return [line]
+    spans.sort(key=lambda s: s["bbox"][0])
+    pieces: List[List[dict]] = [[spans[0]]]
+    for span in spans[1:]:
+        prev = pieces[-1][-1]
+        size = max(prev.get("size", 0) or 0, span.get("size", 0) or 0, 1.0)
+        if span["bbox"][0] - prev["bbox"][2] > TOC_ROW_GAP_EM * size:
+            pieces.append([])
+        pieces[-1].append(span)
+    if len(pieces) == 1:
+        return [line]
+    return [{"bbox": (min(s["bbox"][0] for s in p), min(s["bbox"][1] for s in p),
+                      max(s["bbox"][2] for s in p), max(s["bbox"][3] for s in p)), "spans": p}
+            for p in pieces]
+
+
 def _toc_line_records(doc: fitz.Document, pages: Iterable[int]) -> List[dict]:
     """The contents pages as plain printed lines, for toc_structure."""
     space_profile = _space_profile(doc)
@@ -1447,7 +1566,8 @@ def _toc_line_records(doc: fitz.Document, pages: Iterable[int]) -> List[dict]:
         for block in page.get_text("rawdict").get("blocks", []):
             if block.get("type") != 0:
                 continue
-            for line in _merge_baseline_fragments(block.get("lines", []), 10.0):
+            merged = _merge_baseline_fragments(block.get("lines", []), 10.0)
+            for line in (piece for row in merged for piece in _toc_row_pieces(row)):
                 text = ""
                 spans = line.get("spans", [])
                 for span in spans:

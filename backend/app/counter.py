@@ -136,5 +136,10 @@ def count(session) -> bool:
             return False
         waiting, data["pending"] = data["pending"], []
         _save(data)
-    threading.Thread(target=_send, args=(waiting + [session.genre or "diger"],), daemon=True).start()
+    genres = waiting + [session.genre or "diger"]
+    try:
+        threading.Thread(target=_send, args=(genres,), daemon=True).start()
+    except RuntimeError:
+        # no threads: Matbaa in the browser (app/browser.py) sends it now
+        _send(genres)
     return True

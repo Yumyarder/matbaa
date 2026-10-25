@@ -244,7 +244,7 @@ def read_pages(pages: Iterable[Tuple[int, str]]) -> Imprint:
 
 def read_pdf(pdf_path: str) -> Imprint:
     """The imprint of a PDF, from the text of its first and last pages."""
-    import fitz
+    import pymupdf as fitz
 
     try:
         doc = fitz.open(pdf_path)

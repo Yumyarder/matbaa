@@ -11,7 +11,7 @@ import os
 import time
 from typing import Callable, Dict, Optional
 
-import fitz
+import pymupdf as fitz
 
 from app import ocr_layer
 from app.book_names import fill as fill_from_filename

@@ -25,7 +25,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if os.path.join(REPO_ROOT, "backend") not in sys.path:
     sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.parsers.pdf_parser import (  # noqa: E402
     _merge_baseline_fragments,
@@ -91,6 +91,18 @@ check("nothing is dropped when the font's usual space is unknown",
 punct = glyphs([("-", 0, 3), (" ", 3, 4.7), ("T", 4.7, 9)])
 check("a narrow space next to punctuation is kept",
       _reconstruct_chars(punct, 10.0, 0.25) == "- T")
+# "Th ompson" from PyMuPDF 1.26+: the Th ligature split into T and h, a
+# full-width space put back inside it, and "o" beginning where "h" begins
+ligature = glyphs([("T", 0, 10.6), ("h", 10.6, 15.9), (" ", 5.5, 7.8), ("o", 10.6, 15.6), ("m", 15.6, 23.7)])
+check("a space invented inside a ligature is dropped, whatever its width",
+      _reconstruct_chars(ligature, 10.0, 0.227) == "Thom")
+check("even when the font's usual space is unknown",
+      _reconstruct_chars(ligature, 10.0, None) == "Thom")
+# a real space after a zero-width glyph starts a hair before it (seen in
+# scanned books' text layers); the next letter comes after, so it stays
+after_empty = glyphs([("e", 0, 9), ("y", 9, 9), (" ", 8.98, 11.5), ("b", 12, 17)])
+check("a real space that starts just before an empty glyph is kept",
+      _reconstruct_chars(after_empty, 10.0, 0.25) == "ey b")
 
 print("-- a single-column page is read top to bottom --")
 

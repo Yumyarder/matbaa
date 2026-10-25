@@ -295,7 +295,7 @@ check("a numbered bookmark also matches its name printed alone",
       and "İki Dünya Görüşü" in title_variants("I. İki Dünya Görüşü"))
 
 print("\nA book whose headings look like its body still splits where its bookmarks say")
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.parsers.pdf_parser import convert_pdf_to_chapters as _convert  # noqa: E402
 
@@ -455,7 +455,7 @@ check("and the entries are still read", "1. Şemalar" in titles and "3. Şemalar
 print("-- a back cover at the book's own size is shown as printed --")
 import tempfile  # noqa: E402
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.parsers.pdf_parser import _reads_as_back_cover, get_pdf_page_previews  # noqa: E402
 

@@ -27,7 +27,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Callable, List, Optional
 
-import fitz
+import pymupdf as fitz
 
 from app.ocr_env import find_tessdata, installed_languages
 from app.utils.text_quality import garbage_share

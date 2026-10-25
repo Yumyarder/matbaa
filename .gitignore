@@ -17,6 +17,10 @@ node_modules/
 dist/
 build/
 backend/app/frontend_dist/
+# the browser build (tools/build_browser.py), deployed with the site
+site/uygulama/
+# wrangler's local state
+.wrangler/
 *.spec.bak
 
 # --- Matbaa working artifacts ---

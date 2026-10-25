@@ -23,7 +23,7 @@ from difflib import SequenceMatcher
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.parsers.pdf_parser import convert_pdf_to_chapters, get_pdf_page_previews  # noqa: E402
 from app.utils.text_quality import garbage_share  # noqa: E402

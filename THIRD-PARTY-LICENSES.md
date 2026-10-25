@@ -48,6 +48,27 @@ lisans yüklemeyen özel bir istisnayla gelir.
 | loose-envify, js-tokens | — | MIT |
 | Vite, @vitejs/plugin-react (yalnız derlemede) | 5.x | MIT |
 
+## Tarayıcı sürümü (matbaa.pages.dev/uygulama/)
+
+Aynı Python kodu ve aynı arayüz, tarayıcıda WebAssembly üzerinde çalışır. Siteden şunlar dağıtılır
+(`tools/build_browser.py` her dosyayı sabitlenmiş SHA-256 özetiyle denetler):
+
+| Paket | Sürüm | Lisans |
+|---|---|---|
+| Pyodide (CPython 3.13'ün WebAssembly yapımı ve Emscripten çalışma ortamıyla) | 0.29.4 | MPL-2.0 (CPython: PSF License; Emscripten: MIT / NCSA) |
+| PyMuPDF (Artifex Software, WebAssembly yapımı) | 1.28.2 | GNU AGPL-3.0 |
+| EbookLib | 0.18 | GNU AGPL-3.0 |
+| lxml | 6.0.2 | BSD-3-Clause |
+| Pillow | 11.3.0 | HPND |
+| fontTools | 4.56.0 | MIT |
+| FastAPI, Starlette, Pydantic, pydantic-core, anyio, httpx | Pyodide 0.29.4'teki sürümler | MIT / BSD-3-Clause |
+| Jinja2, MarkupSafe | Pyodide 0.29.4'teki sürümler | BSD-3-Clause |
+| python-multipart | 0.0.32 | Apache-2.0 |
+| six, sniffio, annotated-types, typing-inspection, pyodide-http | Pyodide 0.29.4'teki sürümler | MIT (sniffio: MIT ya da Apache-2.0) |
+| typing-extensions | 4.15.0 | PSF-2.0 |
+| SQLite | Pyodide 0.29.4'teki sürüm | Kamu malı |
+| OpenSSL | 1.1.1w | OpenSSL ve SSLeay lisansları |
+
 ## Yazı tipleri
 
 | Yazı tipi | Kimin | Lisans | Nerede |

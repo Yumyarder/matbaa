@@ -72,8 +72,9 @@ def _search(text: str) -> List[Tuple[str, str]]:
     """(label, description) of Wikidata's best matches for `text`."""
     if not text or not text.strip():
         return []
+    # origin=*: Wikidata answers a browser's anonymous request (Matbaa in the browser)
     query = urllib.parse.urlencode({"action": "wbsearchentities", "search": text.strip()[:120], "language": "tr",
-                                    "uselang": "en", "type": "item", "limit": 5, "format": "json"})
+                                    "uselang": "en", "type": "item", "limit": 5, "format": "json", "origin": "*"})
     req = urllib.request.Request(f"{WIKIDATA}?{query}", headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # noqa: S310 - one fixed public host
         data = json.loads(resp.read().decode("utf-8"))

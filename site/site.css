@@ -81,6 +81,35 @@ a:hover { color: var(--red-deep); }
 .hero h1 { margin: 0; font-size: 3.5rem; font-weight: 400; line-height: 1.06; letter-spacing: -0.01em; max-width: 12ch; }
 .hero p { margin: 0; max-width: 44ch; font-size: 1.1875rem; }
 .actions { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; }
+
+/* the way in: a rubric block the size of a title page, a PDF dropped on it
+   or a click opens the app in the browser (site.js) */
+.start { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 1fr auto;
+  gap: 1rem 1.5rem; max-width: 26rem; aspect-ratio: 8 / 5; margin-top: 2.25rem; padding: 1.75rem 1.75rem 1.6rem;
+  background: var(--red); color: var(--paper); text-decoration: none; transition: background-color 160ms ease; }
+.start::before { content: ""; position: absolute; inset: -6px; pointer-events: none;
+  background: linear-gradient(var(--red), var(--red)) 0 6px / 100% 1px no-repeat,
+              linear-gradient(var(--red), var(--red)) 0 calc(100% - 6px) / 100% 1px no-repeat,
+              linear-gradient(var(--red), var(--red)) 6px 0 / 1px 100% no-repeat,
+              linear-gradient(var(--red), var(--red)) calc(100% - 6px) 0 / 1px 100% no-repeat; }
+.start::after { content: ""; position: absolute; inset: 9px; pointer-events: none; border: 1px solid rgba(243, 238, 227, 0.55); }
+.start:hover, .start--over { background: var(--red-deep); color: var(--paper); }
+.start--over::after { border: 1px dashed var(--paper); }
+.start__title { grid-column: 1; grid-row: 1; align-self: start; font-size: 2.25rem; line-height: 1.05; }
+.start__text { grid-column: 1 / -1; grid-row: 2; max-width: 36ch; font-size: 1rem; line-height: 1.45;
+  color: rgba(243, 238, 227, 0.88); }
+/* a sheet with its corner turned and the press's cross on it */
+.start__sheet { grid-column: 2; grid-row: 1; align-self: start; position: relative; width: 3.25rem; height: 4.25rem;
+  border: 1px solid var(--paper); clip-path: polygon(0 0, calc(100% - 0.9rem) 0, 100% 0.9rem, 100% 100%, 0 100%);
+  transition: transform 160ms ease; }
+.start__sheet::before { content: ""; position: absolute; top: -1px; right: -1px; width: 0.9rem; height: 0.9rem;
+  background: linear-gradient(225deg, transparent 50%, var(--paper) 50%, var(--paper) calc(50% + 1px), rgba(243, 238, 227, 0.22) calc(50% + 1px)); }
+.start__sheet::after { content: ""; position: absolute; left: 50%; top: 55%; width: 15px; height: 15px; margin: -7px 0 0 -7px;
+  background: linear-gradient(var(--paper), var(--paper)) center / 100% 1px no-repeat,
+              linear-gradient(var(--paper), var(--paper)) center / 1px 100% no-repeat; }
+.start:hover .start__sheet, .start--over .start__sheet { transform: translateY(-3px); }
+.start__status { min-height: 0; margin: 0.6rem 0 0; font-size: 0.875rem; font-style: italic; color: var(--red-ink); }
+.start__status:empty { display: none; }
 .hint { margin-top: 1.9rem; font-size: 0.875rem; font-style: italic; color: var(--ink-2); }
 
 /* the counter (site.js): the number set large, the genres as a ledger
@@ -206,9 +235,17 @@ td:last-child { font-style: italic; color: var(--ink-2); }
 .foot p { margin: 0; max-width: 60ch; }
 
 @media (max-width: 860px) {
-  .hero { grid-template-columns: 1fr; padding-top: 2.5rem; }
+  .hero { grid-template-columns: minmax(0, 1fr); padding-top: 2.5rem; }
   .hero h1 { font-size: 2.5rem; }
   .steps, .cols { grid-template-columns: 1fr; }
   .nav { display: none; }
+}
+@media (max-width: 520px) {
+  /* the three books and the red block fit a phone's width */
+  .shelf { gap: 1rem; }
+  .tome { width: 5.5rem; }
+  .tome:nth-child(2) { width: 6.25rem; }
+  .start { aspect-ratio: auto; min-height: 13rem; padding: 1.5rem 1.4rem 1.4rem; }
+  .start__title { font-size: 1.875rem; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

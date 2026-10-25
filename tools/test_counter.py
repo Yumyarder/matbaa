@@ -119,7 +119,7 @@ check("turning it off forgets what waited", counter.load()["pending"] == [])
 counter.settings(enabled=True)
 
 print("In the app: the first export counts, the next does not")
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app import main  # noqa: E402

@@ -32,7 +32,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if os.path.join(REPO_ROOT, "backend") not in sys.path:
     sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.builders.css_template import MATBAA_CSS  # noqa: E402
 from app.builders.epub_builder import build_epub  # noqa: E402

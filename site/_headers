@@ -9,3 +9,22 @@
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   Cross-Origin-Opener-Policy: same-origin
+
+# The browser build (tools/build_browser.py, /uygulama/): the app and its
+# engine, Matbaa's own Python on Pyodide (WebAssembly), served from here.
+# Like the desktop app, the engine asks Wikidata and Vikisöz/Wikiquote about
+# a book (its title and author only), and Open Library and Google Books for
+# an ISBN when the reader clicks; nothing else leaves the browser.
+/uygulama/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self' https://www.wikidata.org https://tr.wikiquote.org https://en.wikiquote.org https://openlibrary.org https://covers.openlibrary.org https://*.archive.org https://www.googleapis.com https://books.google.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; frame-src 'self' blob: data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+/uygulama/pyodide-*
+  Cache-Control: public, max-age=31536000, immutable
+/uygulama/matbaa-*
+  Cache-Control: public, max-age=31536000, immutable
+/uygulama/engine.json
+  Cache-Control: no-cache
+/uygulama/sw.js
+  Cache-Control: no-cache
+/uygulama/engine.worker.js
+  Cache-Control: no-cache

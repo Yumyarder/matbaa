@@ -50,7 +50,7 @@ def projects_folder() -> str:
 
 
 def _pdf_words(path: str) -> Counter:
-    import fitz
+    import pymupdf as fitz
 
     name = os.path.splitext(os.path.basename(path))[0]
     copies = sorted(glob.glob(os.path.join(OCR_CACHE, glob.escape(name) + "-*.pdf")), key=os.path.getmtime)

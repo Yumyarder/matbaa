@@ -345,7 +345,7 @@ def decide(local: Guess, online) -> Guess:
 
 def front_pages_text(pdf_path: str, front: int = 4, back: int = 2) -> str:
     """The text of a PDF's first and last pages, where a book names itself."""
-    import fitz
+    import pymupdf as fitz
 
     try:
         doc = fitz.open(pdf_path)

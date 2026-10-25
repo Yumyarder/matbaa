@@ -189,7 +189,7 @@ print("In the app: guessed at conversion, Wikidata only for the reader's app, ch
 import tempfile  # noqa: E402
 import zipfile  # noqa: E402
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 os.environ["MATBAA_PROJECTS"] = tempfile.mkdtemp()
 os.environ.pop("MATBAA_ONLINE", None)

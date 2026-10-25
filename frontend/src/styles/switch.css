@@ -80,3 +80,37 @@
 :root[data-ui="gece"] .about__table { width: 100%; border-collapse: collapse; font-size: 0.78rem; color: #a9afb8; }
 :root[data-ui="gece"] .about__table th, :root[data-ui="gece"] .about__table td { text-align: left; padding: 5px 8px 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.09); vertical-align: top; }
 :root[data-ui="gece"] .about__table th { color: #f1ede4; font-weight: 500; }
+
+/* The browser build's boot screen (browser/BrowserBoot.jsx), shown while the
+   engine loads: the press's steps, one at a time. */
+.boot { box-sizing: border-box; min-height: 100vh; max-width: 40rem; margin: 0 auto; padding: 18vh 24px 48px; }
+.boot__mark { margin: 0 0 2.5rem; font-size: 0.75rem; letter-spacing: 0.24em; text-transform: uppercase; }
+.boot__cross { display: inline-block; width: 11px; height: 11px; margin: 0 0.5em; vertical-align: middle;
+  background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat,
+              linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat; }
+.boot__title { margin: 0 0 1.5rem; font-size: 2.5rem; font-weight: 400; line-height: 1.1; }
+.boot__steps { list-style: none; margin: 0 0 2rem; padding: 0; }
+.boot__steps li { position: relative; padding: 0.45rem 0 0.45rem 1.75rem; font-size: 1.125rem; opacity: 0.45; }
+.boot__steps li::before { content: ""; position: absolute; left: 0; top: 50%; width: 0.75rem; height: 1px; background: currentColor; }
+.boot__steps li.is-done { opacity: 0.8; }
+.boot__steps li.is-now { opacity: 1; }
+.boot__steps li.is-now::before { width: 1rem; animation: boot-tick 1.2s ease-in-out infinite alternate; }
+@keyframes boot-tick { from { transform: scaleX(0.4); transform-origin: left; } to { transform: scaleX(1); transform-origin: left; } }
+.boot__text { max-width: 34rem; margin: 0 0 1rem; font-size: 1rem; line-height: 1.55; }
+.boot__detail { margin: 0 0 1rem; font-size: 0.8125rem; opacity: 0.7; word-break: break-word; }
+@media (prefers-reduced-motion: reduce) { .boot__steps li.is-now::before { animation: none; } }
+
+:root[data-ui="hasiye"] .boot { color: #1a1a1a; font-family: "EB Garamond", Garamond, "Times New Roman", serif; }
+:root[data-ui="hasiye"] body:has(.boot) { background: #f3eee3; }
+:root[data-ui="hasiye"] .boot__mark, :root[data-ui="hasiye"] .boot__steps li.is-now::before { color: #b0321f; }
+:root[data-ui="hasiye"] .boot__steps li.is-now { color: #1a1a1a; }
+:root[data-ui="hasiye"] .boot a { color: #b0321f; }
+:root[data-ui="gece"] .boot { color: #f1ede4; font-family: "Inter", sans-serif; }
+:root[data-ui="gece"] body:has(.boot) { background: #14171c; }
+:root[data-ui="gece"] .boot__mark, :root[data-ui="gece"] .boot a { color: #c08e4f; }
+.boot__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+.boot__button { padding: 0.6rem 1.1rem; border: 1px solid currentColor; background: transparent; color: inherit;
+  font: inherit; font-size: 1rem; cursor: pointer; }
+:root[data-ui="hasiye"] .boot__button { border-color: #c23a2a; background: #c23a2a; color: #f3eee3; }
+:root[data-ui="hasiye"] .boot__button:hover { background: #a32c1c; }
+:root[data-ui="gece"] .boot__button { border-color: #c08e4f; color: #f1ede4; }

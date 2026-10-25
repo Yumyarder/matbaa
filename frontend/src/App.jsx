@@ -6,6 +6,8 @@ import Workbench from "./components/Workbench.jsx";
 import PdfEditorPage from "./components/editor/PdfEditorPage.jsx";
 import LibraryPage from "./components/LibraryPage.jsx";
 import UiSwitch, { UiModeContext, useUiMode } from "./components/UiSwitch.jsx";
+import DesktopOnly from "./components/DesktopOnly.jsx";
+import { IN_BROWSER } from "./browser/engine.js";
 import {
   uploadPdf,
   startOcr,
@@ -32,7 +34,7 @@ import {
 // reusing what's already there.
 const SESSION_STORAGE_KEY = "matbaa:sessionId";
 
-export default function App() {
+export default function App({ initialFile = null }) {
   const [stage, setStage] = useState("upload"); // upload -> reviewing -> pdfEditor -> workbench
   const [uiMode, setUiMode] = useUiMode();
   const [preview, setPreview] = useState(null);
@@ -247,7 +249,10 @@ export default function App() {
       setStage("reviewing");
       if (result.scanned_pages?.length) {
         if (!result.ocr_available) {
-          setOcrJob({ state: "unavailable", done: 0, total: 0, message: result.ocr_message, reason: result.ocr_reason });
+          const message = IN_BROWSER
+            ? "Taranmış sayfaları okumak (OCR) şimdilik yalnız Windows uygulamasında; bu sayfalar görsel olarak kalır."
+            : result.ocr_message;
+          setOcrJob({ state: "unavailable", done: 0, total: 0, message, reason: result.ocr_reason });
         } else {
           setOcrJob({ state: "running", done: 0, total: result.scanned_pages.length, message: null, reason: result.ocr_reason });
           startOcr(result.upload_id).catch(() => {});
@@ -260,6 +265,15 @@ export default function App() {
       setIsUploading(false);
     }
   }, [applyPages, watchOcr]);
+
+  // A PDF the visitor dropped on the site's front page (browser build only):
+  // read in as if chosen here, once.
+  const initialTaken = useRef(false);
+  useEffect(() => {
+    if (!initialFile || initialTaken.current) return;
+    initialTaken.current = true;
+    handleFileSelected(initialFile);
+  }, [initialFile, handleFileSelected]);
 
   const handleSkipOcr = useCallback(() => {
     if (ocrPollRef.current) {
@@ -523,7 +537,9 @@ export default function App() {
         />
       )}
 
-      {stage === "notebook" && <ReadingNotebook onBack={() => setStage("upload")} />}
+      {stage === "notebook" && (IN_BROWSER
+        ? <DesktopOnly onBack={() => setStage("upload")} />
+        : <ReadingNotebook onBack={() => setStage("upload")} />)}
 
       {stage === "library" && <LibraryPage onBack={() => setStage("upload")} onOpenProject={openProject} />}
 

@@ -1,4 +1,5 @@
-// The site's counter (functions/api/sayac.js), on two pages.
+// The site's script: the way into the app on the front page (a PDF dropped
+// on the red block), and the counter (functions/api/sayac.js) on two pages.
 //
 // The front page (#sayac): how many books every reader's Matbaa has set,
 // counting up when it comes into view; clicked, the genres open beneath it
@@ -222,6 +223,69 @@
     });
     page.querySelector(".raf__filled").hidden = false;
   }
+
+  // --- the way in -------------------------------------------------------------
+  // A PDF dropped on the block waits in this browser's IndexedDB for the app
+  // (uygulama/, the same origin), which opens with it; it is never sent.
+  function stash(file) {
+    return new Promise(function (resolve, reject) {
+      if (!window.indexedDB) { reject(new Error("no IndexedDB")); return; }
+      var open = indexedDB.open("matbaa-bekleyen", 1);
+      open.onupgradeneeded = function () { open.result.createObjectStore("pdf"); };
+      open.onerror = function () { reject(open.error); };
+      open.onsuccess = function () {
+        var db = open.result, tx = db.transaction("pdf", "readwrite");
+        tx.objectStore("pdf").put({ name: file.name, file: file, at: Date.now() }, "bekleyen");
+        tx.oncomplete = function () { db.close(); resolve(); };
+        tx.onerror = function () { db.close(); reject(tx.error); };
+      };
+    });
+  }
+
+  function startPanel(link) {
+    var status = document.querySelector(".start__status"), depth = 0;
+    var hasFiles = function (e) {
+      return !!e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], "Files") >= 0;
+    };
+    var leave = function () { depth = 0; link.classList.remove("start--over"); };
+    link.addEventListener("dragenter", function (e) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      depth += 1;
+      link.classList.add("start--over");
+    });
+    link.addEventListener("dragleave", function () {
+      depth = Math.max(0, depth - 1);
+      if (!depth) link.classList.remove("start--over");
+    });
+    // anywhere on the page a dropped file must not replace the page itself
+    window.addEventListener("dragover", function (e) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = link.contains(e.target) ? "copy" : "none";
+    });
+    window.addEventListener("drop", function (e) {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      leave();
+      if (!link.contains(e.target)) {
+        status.textContent = "PDF'i kırmızı kutunun üstüne bırakın.";
+        return;
+      }
+      var file = e.dataTransfer.files[0];
+      if (!file || (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name))) {
+        status.textContent = "Bu bir PDF değil. Matbaa PDF dosyalarını dizer.";
+        return;
+      }
+      status.textContent = "Tezgâh açılıyor…";
+      var target = link.getAttribute("href");
+      stash(file).then(function () { window.location.href = target + "?bekleyen=1"; },
+                       function () { window.location.href = target; });
+    });
+  }
+
+  var start = document.getElementById("baslat");
+  if (start) startPanel(start);
 
   var box = document.getElementById("sayac");
   var page = document.getElementById("raf");

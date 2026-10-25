@@ -27,7 +27,7 @@ for _stream in (sys.stdout, sys.stderr):
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app import book_names, genre, imprint  # noqa: E402
 from app.dictionary_build import library_folder  # noqa: E402

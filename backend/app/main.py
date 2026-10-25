@@ -529,7 +529,7 @@ def _fill_genres() -> None:
 def _book_report(result, pdf_path: str, upload_id: str) -> Optional[dict]:
     """The book's report; a failure here must never cost the conversion."""
     try:
-        import fitz
+        import pymupdf as fitz
         with fitz.open(pdf_path) as doc:
             producer = (doc.metadata or {}).get("producer") or ""
             ocr_pages = sum(1 for page in doc if _page_text_is_ocr(page))

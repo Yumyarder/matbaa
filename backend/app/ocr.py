@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import List
 
-import fitz
+import pymupdf as fitz
 
 from app.parsers.pdf_parser import get_text_in_region
 

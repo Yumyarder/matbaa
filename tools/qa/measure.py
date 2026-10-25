@@ -29,7 +29,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-import fitz
+import pymupdf as fitz
 
 from . import textnorm
 from .epubinspect import EpubInfo, inspect_epub

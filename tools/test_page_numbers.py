@@ -95,7 +95,7 @@ import re  # noqa: E402
 import tempfile  # noqa: E402
 import zipfile  # noqa: E402
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.builders.css_template import MATBAA_CSS  # noqa: E402
 from app.builders.epub_builder import build_epub  # noqa: E402

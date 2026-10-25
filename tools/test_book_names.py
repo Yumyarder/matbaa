@@ -22,7 +22,7 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(REPO_ROOT, "backend"))
 os.environ["MATBAA_PROJECTS"] = tempfile.mkdtemp()
 
-import fitz  # noqa: E402
+import pymupdf as fitz  # noqa: E402
 
 from app.book_names import fill, from_filename  # noqa: E402
 from app.parsers.pdf_parser import convert_pdf_to_chapters  # noqa: E402

@@ -18,7 +18,7 @@ os.environ.setdefault("OMP_THREAD_LIMIT", "1")
 
 
 def ocr_page_pdf(page, lang: str, tessdata: str, zoom: float, dpi: int) -> bytes:
-    import fitz
+    import pymupdf as fitz
 
     pix = page.get_pixmap(
         matrix=fitz.Matrix(zoom, zoom),
@@ -32,7 +32,7 @@ def ocr_page_pdf(page, lang: str, tessdata: str, zoom: float, dpi: int) -> bytes
 
 
 def main(argv) -> int:
-    import fitz
+    import pymupdf as fitz
 
     from app.ocr_layer import OCR_DPI, OCR_RENDER_ZOOM
 

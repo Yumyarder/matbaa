@@ -78,7 +78,8 @@ class _TopLevelItems(HTMLParser):
 
 
 def _api(base: str, params: Dict) -> Dict:
-    query = urllib.parse.urlencode({**params, "format": "json", "formatversion": 2})
+    # origin=*: the wiki answers a browser's anonymous request (Matbaa in the browser)
+    query = urllib.parse.urlencode({**params, "format": "json", "formatversion": 2, "origin": "*"})
     req = urllib.request.Request(f"{base}?{query}", headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # noqa: S310 - Wikimedia's own hosts
         return json.loads(resp.read().decode("utf-8"))

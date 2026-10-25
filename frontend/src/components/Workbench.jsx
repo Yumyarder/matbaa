@@ -8,6 +8,7 @@ import FindReplaceModal from "./FindReplaceModal.jsx";
 import ImprintModal from "./ImprintModal.jsx";
 import IndexModal from "./IndexModal.jsx";
 import AskModal from "./AskModal.jsx";
+import { IN_BROWSER } from "../browser/engine.js";
 
 export default function Workbench({ session, onSaveChapter, onSplitChapter, onExport, onMetaChange, onBulkReplace, onSessionReplace, onReorderChapters, onStartOver, saveStatus, isExporting }) {
   const [selectedId, setSelectedId] = useState(session.chapters[0]?.id ?? null);
@@ -255,9 +256,17 @@ export default function Workbench({ session, onSaveChapter, onSplitChapter, onEx
           <button className="btn" onClick={openFindReplace}>
             Bul ve Değiştir
           </button>
-          <button className="btn btn--send" onClick={() => setShowKindle(true)}>
-            Kindle'a Gönder
-          </button>
+          {IN_BROWSER ? (
+            // a browser cannot send e-mail: the EPUB goes up on Amazon's own page
+            <a className="btn btn--send" href="https://www.amazon.com/sendtokindle" target="_blank" rel="noreferrer"
+               title="EPUB'u aktarın, sonra Amazon'un Send to Kindle sayfasına bırakın">
+              Kindle'a Gönder
+            </a>
+          ) : (
+            <button className="btn btn--send" onClick={() => setShowKindle(true)}>
+              Kindle'a Gönder
+            </button>
+          )}
           {readerNotes?.highlights > 0 && (
             <label className="workbench__notes-toggle"
                    title="Altını çizdiğin yerler kitapta işaretli, notların ve soruların kitabın sonunda bir ek olarak">
