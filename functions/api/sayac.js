@@ -9,7 +9,11 @@
 // GET /api/sayac
 //   {"total": 15, "genres": [{"tur": "felsefe", "n": 4}, ...],
 //    "recent": [{"tur": "felsefe", "saat": "2026-10-24T09"}, ...]}
-//   for the front page; cached a minute.
+//   for the front page and every Matbaa's start screen. The totals are kept
+//   per genre as books come (table sayim), so an answer reads some thirty
+//   rows however many books there are — counting every row on every view
+//   would spend the free plan's daily reads after a few hundred views of a
+//   large count — and the answer is kept at the edge for a minute.
 
 const GENRES = new Set([
   "felsefe", "siyaset", "ekonomi", "tarih", "sosyoloji", "psikoloji", "sanat", "bilim",
@@ -18,6 +22,7 @@ const GENRES = new Set([
 const MAX_BODY = 64;
 const DAILY_CAP = 2000;
 const RECENT = 20;
+const CACHE_SECONDS = 60;
 
 function reply(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -43,16 +48,25 @@ export async function onRequestPost({ request, env }) {
   if (today && today.n >= DAILY_CAP) return reply({ error: "daily limit" }, 429);
   await env.DB.prepare("INSERT INTO dizilen (tur, gun, saat) VALUES (?, ?, ?)")
     .bind(body.tur, day, now.slice(0, 13)).run();
+  await env.DB.prepare("INSERT INTO sayim (tur, n) VALUES (?, 1) ON CONFLICT(tur) DO UPDATE SET n = n + 1")
+    .bind(body.tur).run();
   return reply({ ok: true }, 201);
 }
 
-export async function onRequestGet({ env }) {
-  const total = await env.DB.prepare("SELECT COUNT(*) AS n FROM dizilen").first();
-  const genres = await env.DB.prepare("SELECT tur, COUNT(*) AS n FROM dizilen GROUP BY tur ORDER BY n DESC, tur").all();
+export async function onRequestGet({ request, env }) {
+  const cache = typeof caches !== "undefined" && request ? caches.default : null;
+  if (cache) {
+    const kept = await cache.match(request);
+    if (kept) return kept;
+  }
+  const genres = await env.DB.prepare("SELECT tur, n FROM sayim WHERE n > 0 ORDER BY n DESC, tur").all();
   const recent = await env.DB.prepare("SELECT tur, saat FROM dizilen ORDER BY id DESC LIMIT ?").bind(RECENT).all();
-  return reply(
-    { total: total ? total.n : 0, genres: genres.results || [], recent: recent.results || [] },
+  const rows = genres.results || [];
+  const res = reply(
+    { total: rows.reduce((sum, r) => sum + r.n, 0), genres: rows, recent: recent.results || [] },
     200,
-    { "Cache-Control": "public, max-age=60" },
+    { "Cache-Control": `public, max-age=${CACHE_SECONDS}` },
   );
+  if (cache) await cache.put(request, res.clone());
+  return res;
 }

@@ -178,8 +178,10 @@ if out:
     check("a body that is not JSON is refused", out["notJson"] == 400)
     check("a long body is refused", out["tooLarge"] == 413)
     check("a row is the genre, the day and the hour, no address", out["columns"] == ["id", "tur", "gun", "saat"])
+    check("each genre's total is kept as books come", out["sayim"] == [
+        {"tur": "felsefe", "n": 2}, {"tur": "rus-edebiyati", "n": 1}, {"tur": "siyaset", "n": 1}])
     body = out["get"]["body"]
-    check("the front page gets the total and each genre", body["total"] == 4
+    check("the front page gets the total and each genre, from the kept totals", body["total"] == 4
           and body["genres"][0] == {"tur": "felsefe", "n": 2})
     check("and the latest, by genre and hour only", body["recent"] and set(body["recent"][0]) == {"tur", "saat"})
     check("cached a minute", out["get"]["cache"] == "public, max-age=60")

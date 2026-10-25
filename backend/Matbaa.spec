@@ -51,4 +51,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    # the seal (brand/, tools/make_icons.py)
+    icon='matbaa.ico',
 )

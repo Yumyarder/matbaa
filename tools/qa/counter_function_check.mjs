@@ -37,6 +37,10 @@ out.unknown = await post(JSON.stringify({ tur: "uydurma", v: 1 }));
 out.notJson = await post("tur=felsefe");
 out.tooLarge = await post(JSON.stringify({ tur: "felsefe", pad: "x".repeat(80) }));
 out.columns = db.prepare("SELECT name FROM pragma_table_info('dizilen')").all().map((r) => r.name);
+out.sayim = db.prepare("SELECT tur, n FROM sayim ORDER BY tur").all().map((r) => ({ ...r }));
+// a row the totals were never told about stays out of them: the answer
+// reads the kept totals, not every row
+db.prepare("INSERT INTO dizilen (tur, gun, saat) VALUES ('tarih', '2026-01-01', '2026-01-01T00')").run();
 const get = await fn.onRequestGet({ env: { DB } });
 out.get = { status: get.status, cache: get.headers.get("Cache-Control"), body: await get.json() };
 const day = new Date().toISOString().slice(0, 10);
