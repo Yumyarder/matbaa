@@ -42,10 +42,43 @@ function scheduleSave() {
   }, 250);
 }
 
+// Fetch every file the engine needs once, counting the bytes as they come,
+// so the boot screen can show how far the download is; Pyodide then finds
+// them in the HTTP cache (the files are served immutable).
+async function download(files) {
+  const total = files.reduce((sum, f) => sum + f.size, 0);
+  let done = 0;
+  let last = 0;
+  const report = (force) => {
+    const now = Date.now();
+    if (force || now - last > 200) {
+      last = now;
+      progress("download", { done, total });
+    }
+  };
+  const queue = files.slice();
+  async function next() {
+    for (let f = queue.shift(); f; f = queue.shift()) {
+      const res = await fetch("./" + f.path);
+      if (!res.ok) throw new Error(`${f.path}: ${res.status}`);
+      const reader = res.body.getReader();
+      for (;;) {
+        const { done: end, value } = await reader.read();
+        if (end) break;
+        done += value.byteLength;
+        report(false);
+      }
+    }
+  }
+  await Promise.all([next(), next(), next(), next()]);
+  report(true);
+}
+
 async function boot(cfg) {
   config = cfg;
-  progress("core");
   const manifest = await (await fetch("./engine.json", { cache: "no-cache" })).json();
+  if (manifest.files) await download(manifest.files);
+  progress("core");
   const PYODIDE = manifest.pyodide;
   importScripts(PYODIDE + "pyodide.js");
   py = await self.loadPyodide({

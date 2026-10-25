@@ -159,10 +159,16 @@ def main() -> None:
 
     for name in ("sw.js", "engine.worker.js"):
         shutil.copyfile(ROOT / "browser" / name, OUT / name)
+    # everything the worker fetches, with its size, so the boot screen can
+    # say how much of it has come
+    fetched = [f"pyodide-{PYODIDE_VERSION}/{name}" for name in CORE]
+    fetched += [f"pyodide-{PYODIDE_VERSION}/{lock['packages'][key]['file_name']}" for key in names]
+    fetched += [f"pyodide-{PYODIDE_VERSION}/{PYMUPDF_WHEEL}", app_name]
     manifest = {
         "pyodide": f"./pyodide-{PYODIDE_VERSION}/",
         "packages": names + [PYMUPDF_WHEEL],
         "app": app_name,
+        "files": [{"path": p, "size": (OUT / p).stat().st_size} for p in fetched],
     }
     (OUT / "engine.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 

@@ -3,6 +3,7 @@ import { fetchNotebook, fetchNotebookBook, fetchProjects, fetchStartQuote } from
 import CounterPanel from "./CounterPanel.jsx";
 import Icon from "./Icon.jsx";
 import ShelfCard, { ALPHABET, authorOf, initial } from "./ShelfCard.jsx";
+import { IN_BROWSER } from "../browser/engine.js";
 
 // The Haşiye start screen, set as an edition's front matter: a running head,
 // the contents down the left margin, the call to bring a PDF, a rail of the
@@ -92,9 +93,9 @@ export default function HasiyeStart({ onFileSelected, isConverting, progress, er
   const contents = [
     ["01", "Yeni kitap", "PDF'ten Kindle'a", choose],
     ["02", "Kitaplık", projects ? `${projects.length} kitap` : "Dönüştürülen kitaplar", onOpenLibrary || toShelf],
-    ["03", "Okuma Defteri", "Vurgular ve notlar, Obsidian'a", onOpenNotebook],
-    ["04", "Kelime Defteri", "Kindle'da bakılan kelimeler", onOpenNotebook],
-    ["05", "Kindle'ım", "Yazı tipleri ve Türkçe sözlük", onOpenNotebook],
+    ["03", "Okuma Defteri", IN_BROWSER ? "Windows uygulamasında" : "Vurgular ve notlar, Obsidian'a", onOpenNotebook],
+    ["04", "Kelime Defteri", IN_BROWSER ? "Windows uygulamasında" : "Kindle'da bakılan kelimeler", onOpenNotebook],
+    ["05", "Kindle'ım", IN_BROWSER ? "Windows uygulamasında" : "Yazı tipleri ve Türkçe sözlük", onOpenNotebook],
   ];
 
   return (
@@ -155,8 +156,9 @@ export default function HasiyeStart({ onFileSelected, isConverting, progress, er
                 <h1 className="ed__title">Kitabınızı Kindle'a dizin.</h1>
                 <span className="ed__rule"><Cross /></span>
                 <p className="ed__lede">
-                  Bir PDF bırakın; Matbaa bölümlerini, dipnotlarını ve içindekilerini kurar,
-                  taranmış sayfaları okur ve Kindle'da düzgün okunan bir kitap dizer.
+                  {IN_BROWSER
+                    ? "Bir PDF bırakın; Matbaa bölümlerini, dipnotlarını ve içindekilerini kurar ve Kindle'da düzgün okunan bir kitap dizer. Kitap bu tarayıcıdan çıkmaz."
+                    : "Bir PDF bırakın; Matbaa bölümlerini, dipnotlarını ve içindekilerini kurar, taranmış sayfaları okur ve Kindle'da düzgün okunan bir kitap dizer."}
                 </p>
                 <div className="ed__actions">
                   <button type="button" className="ed-btn ed-btn--primary" onClick={choose}>
@@ -233,8 +235,13 @@ export default function HasiyeStart({ onFileSelected, isConverting, progress, er
                     sonra dönüştürür.</li>
                   <li><strong>Kitabı Kindle'a gönderin</strong> ya da EPUB'u indirin. Tezgâhta bölümleri ve metni
                     düzeltebilirsiniz.</li>
-                  <li><strong>Okuma Defteri'ni açın.</strong> Kindle'ı bağlayın ve Obsidian kasanızı seçin; altını
-                    çizdikleriniz kasanıza, kitaptaki sayfalarıyla gelir.</li>
+                  {IN_BROWSER ? (
+                    <li><strong>Okuma Defteri Windows uygulamasında.</strong> Kindle'ı bağlayıp Obsidian kasanızı
+                      seçtiğinizde altını çizdikleriniz kasanıza, kitaptaki sayfalarıyla gelir.</li>
+                  ) : (
+                    <li><strong>Okuma Defteri'ni açın.</strong> Kindle'ı bağlayın ve Obsidian kasanızı seçin; altını
+                      çizdikleriniz kasanıza, kitaptaki sayfalarıyla gelir.</li>
+                  )}
                 </ol>
               </>
             ) : null}

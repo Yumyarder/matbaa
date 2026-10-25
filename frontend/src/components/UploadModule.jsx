@@ -3,6 +3,7 @@ import CounterPanel from "./CounterPanel.jsx";
 import RecentProjects from "./RecentProjects";
 import HasiyeStart from "./HasiyeStart.jsx";
 import { useUi } from "./UiSwitch.jsx";
+import { IN_BROWSER } from "../browser/engine.js";
 
 export default function UploadModule({ onFileSelected, isConverting, progress, error, onOpenProject, onOpenNotebook,
                                        onOpenLibrary }) {
@@ -101,7 +102,9 @@ export default function UploadModule({ onFileSelected, isConverting, progress, e
       {!isConverting && onOpenNotebook && (
         <button type="button" className="notebook-entry" onClick={onOpenNotebook}>
           <span className="notebook-entry__title">Okuma Defteri</span>
-          <span className="notebook-entry__text">Kindle'da altını çizdiklerin ve notların, Obsidian'a</span>
+          <span className="notebook-entry__text">
+            {IN_BROWSER ? "Windows uygulamasında" : "Kindle'da altını çizdiklerin ve notların, Obsidian'a"}
+          </span>
         </button>
       )}
 

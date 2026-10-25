@@ -2896,6 +2896,10 @@ def _running_signature(text: str) -> str:
 OCR_RUNNING_SIMILARITY = 0.85
 OCR_RUNNING_MIN_LETTERS = 6
 OCR_RUNNING_MIN_PAGE_SHARE = 0.3
+# A short margin piece (a name, a title alone) counts as part of a running
+# foot when this share of its letters reads in a row inside one.
+OCR_RUNNING_PIECE_MAX_LETTERS = 24
+OCR_RUNNING_PIECE_SHARE = 0.85
 
 
 def _is_in_ocr_running_band(block: "RawBlock") -> bool:
@@ -2935,9 +2939,25 @@ class RunningElements:
     ocr_keys: Set[str] = field(default_factory=set)
 
     def is_ocr_running(self, block: "RawBlock") -> bool:
-        return (bool(self.ocr_keys) and _is_in_ocr_running_band(block)
-                and OCR_FONT_NAME_HINT.search(block.font_name or "") is not None
-                and _loose_running_key(block.text) in self.ocr_keys)
+        if not (self.ocr_keys and _is_in_ocr_running_band(block)
+                and OCR_FONT_NAME_HINT.search(block.font_name or "") is not None):
+            return False
+        key = _loose_running_key(block.text)
+        if key in self.ocr_keys:
+            return True
+        # A piece of the foot the scan set apart from the rest of it: the
+        # author's name of "V.İ. Lenin | 31" without the book's title beside
+        # it ("wilenin" inside "vileninbiradimileriikiadimgeri"), read as a
+        # note on every page it stood alone.
+        if not OCR_RUNNING_MIN_LETTERS <= len(key) <= OCR_RUNNING_PIECE_MAX_LETTERS:
+            return False
+        for known in self.ocr_keys:
+            if len(known) > len(key):
+                found = SequenceMatcher(None, key, known, autojunk=False).find_longest_match(
+                    0, len(key), 0, len(known))
+                if found.size >= OCR_RUNNING_PIECE_SHARE * len(key):
+                    return True
+        return False
 
     def is_running(self, block: "RawBlock") -> bool:
         sig = _running_signature(block.text)

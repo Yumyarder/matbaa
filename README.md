@@ -69,7 +69,7 @@ Bunun dışında internete yalnız siz bir şeye tıkladığınızda çıkar:
 ### Tarayıcıda, kurulumsuz
 
 [matbaa.pages.dev](https://matbaa.pages.dev)'de **Tarayıcıda başlayın**: Matbaa'nın aynı motoru tarayıcınızın içinde
-çalışır (Pyodide, WebAssembly). İlk açılışta yaklaşık 30 MB iner ve tarayıcıda saklanır; kitaplarınız o
+çalışır (Pyodide, WebAssembly). İlk açılışta yaklaşık 40 MB iner ve tarayıcıda saklanır; kitaplarınız o
 tarayıcının deposunda kalır, hiçbir sunucuya yüklenmez. Taranmış sayfaların OCR'ı, Kindle'ı kabloyla bağlamak,
 Obsidian'a yazmak ve e-postayla göndermek yalnız Windows programında.
 

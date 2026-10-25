@@ -8,6 +8,7 @@ export const IN_BROWSER = import.meta.env.MODE === "browser";
 const BASE = import.meta.env.BASE_URL;
 
 export const STEPS = [
+  ["download", "Tezgâh indiriliyor"],
   ["core", "Dizgi tezgâhı açılıyor"],
   ["packages", "Harfler kasaya diziliyor"],
   ["library", "Kitaplığınız açılıyor"],
@@ -53,7 +54,7 @@ export async function startEngine(onStep) {
   await new Promise((resolve, reject) => {
     worker.onmessage = (event) => {
       const msg = event.data || {};
-      if (msg.kind === "progress") onStep?.(msg.step);
+      if (msg.kind === "progress") onStep?.(msg.step, msg.detail);
       else if (msg.kind === "ready") resolve();
       else if (msg.kind === "failed") reject(Object.assign(new Error(msg.error), { code: "failed" }));
       else if (msg.kind === "save-failed") console.warn("Matbaa: kitaplık kaydedilemedi", msg.error);
