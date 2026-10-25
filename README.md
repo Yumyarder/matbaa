@@ -30,7 +30,8 @@ Türkçe bir Kindle sözlüğü.
 
 ## Ne yapmaz
 
-- **Kopya korumasını (DRM) kırmaz** ve kırmaya yarayan hiçbir şey içermez.
+- **Kopya korumasını (DRM) kırmaz** ve kırmaya yarayan hiçbir şey içermez. Yayıncının metin kopyalamayı
+  kapattığı ya da parolayla kilitlediği PDF'leri de dönüştürmez.
 - **Kitap paylaşmaz.** Ortak bir kütüphane, yükleme sunucusu ya da kitap arama yoktur.
 - Yalnız **hakkına sahip olduğunuz** kitapları kendi kullanımınız için dönüştürmeniz içindir.
 

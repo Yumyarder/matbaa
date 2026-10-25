@@ -13,7 +13,7 @@ from typing import Callable, Dict, Optional
 
 import pymupdf as fitz
 
-from app import ocr_layer
+from app import copy_control, ocr_layer
 from app.book_names import fill as fill_from_filename
 from app.builders.css_template import book_css
 from app.builders.epub_builder import build_epub
@@ -63,6 +63,7 @@ def readable_pdf(pdf: str, work_dir: str, log: Callable[[str], None] = print) ->
 def convert_file(pdf: str, out_epub: str, work_dir: str, use_ocr: bool = True,
                  log: Callable[[str], None] = print) -> Dict:
     t0 = time.time()
+    copy_control.check(pdf)
     source = readable_pdf(pdf, work_dir, log) if use_ocr else pdf
     previews = get_pdf_page_previews(source)
     modes = {m: {p.index for p in previews if p.suggested_mode == m} for m in ("image", "toc", "exclude")}

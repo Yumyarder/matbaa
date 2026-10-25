@@ -1,4 +1,11 @@
+import { startEngine } from "./browser/engine.js";
+
 const BASE = "/api";
+
+// In the site's build the answers come from the engine in this browser
+// (browser/sw.js); a request waits until the page is wired to it. On the
+// desktop startEngine() is already resolved and this is plain fetch.
+const fetch = (...args) => startEngine().then(() => window.fetch(...args));
 
 async function handle(res) {
   if (!res.ok) {
@@ -293,6 +300,7 @@ export function runRegionOcr(uploadId, pageIndex, bbox) {
 export async function uploadPdf(file, onProgress) {
   const form = new FormData();
   form.append("file", file);
+  await startEngine();
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", `${BASE}/upload`);

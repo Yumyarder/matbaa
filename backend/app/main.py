@@ -19,7 +19,7 @@ from app.builders.epub_builder import build_epub
 from app.builders.themes import THEMES, apply_theme, theme_list
 from app import book_lookup, book_names, cover as book_cover, fonts as book_fonts, imprint as book_imprint
 from app import genre as book_genre, genre_lookup
-from app import counter, quote_lookup
+from app import copy_control, counter, quote_lookup
 from app.models import (
     LlmProposals,
     ChapterImage,
@@ -190,6 +190,12 @@ async def upload_pdf(file: UploadFile = File(...)):
         f.write(await file.read())
     with open(_upload_name_path(upload_id), "w", encoding="utf-8") as f:
         f.write(os.path.basename(file.filename))
+
+    refused = copy_control.refusal(pdf_path)
+    if refused:
+        for path in (pdf_path, _upload_name_path(upload_id)):
+            os.remove(path)
+        raise HTTPException(422, refused)
 
     try:
         needs = ocr_layer.pages_needing_ocr(pdf_path)

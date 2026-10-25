@@ -3,7 +3,8 @@ import { fetchNotebook, fetchNotebookBook, fetchProjects, fetchStartQuote } from
 import CounterPanel from "./CounterPanel.jsx";
 import Icon from "./Icon.jsx";
 import ShelfCard, { ALPHABET, authorOf, initial } from "./ShelfCard.jsx";
-import { IN_BROWSER } from "../browser/engine.js";
+import { IN_BROWSER, useEngine } from "../browser/engine.js";
+import EngineStatus, { engineShare, engineText } from "../browser/EngineStatus.jsx";
 
 // The Haşiye start screen, set as an edition's front matter: a running head,
 // the contents down the left margin, the call to bring a PDF, a rail of the
@@ -39,6 +40,7 @@ function Register({ corner }) {
 
 export default function HasiyeStart({ onFileSelected, isConverting, progress, error, onOpenProject, onOpenNotebook,
                                      onOpenLibrary }) {
+  const engine = useEngine();
   const [projects, setProjects] = useState(null);
   const [recent, setRecent] = useState(null);
   const [quote, setQuote] = useState(null);
@@ -169,14 +171,19 @@ export default function HasiyeStart({ onFileSelected, isConverting, progress, er
                   </button>
                 </div>
                 <p className="ed__hint">ya da PDF'i bu sayfanın herhangi bir yerine bırakın · 200 MB'a kadar</p>
+                <EngineStatus />
               </>
             ) : (
               <div className="ed__busy" aria-live="polite">
                 <h1 className="ed__title">Sayfalar taranıyor…</h1>
                 <span className="ed__rule"><Cross /></span>
-                <div className="ed__progress"><span style={{ width: `${progress}%` }} /></div>
+                <div className="ed__progress">
+                  <span style={{ width: `${engine.ready ? (IN_BROWSER ? 100 : progress) : engineShare(engine)}%` }} />
+                </div>
                 <p className="ed__lede">
-                  {progress < 100 ? `Yükleniyor — %${progress}` : "Sayfa küçük resimleri hazırlanıyor…"}
+                  {/* in the browser the file goes nowhere: there is no upload to count */}
+                  {!engine.ready ? engineText(engine, true)
+                    : progress < 100 && !IN_BROWSER ? `Yükleniyor — %${progress}` : "Sayfa küçük resimleri hazırlanıyor…"}
                 </p>
               </div>
             )}

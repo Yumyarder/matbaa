@@ -1,5 +1,6 @@
 // The site's script: the way into the app on the front page (a PDF dropped
-// on the red block), and the counter (functions/api/sayac.js) on two pages.
+// on the red block, the app's files fetched ahead), and the counter
+// (functions/api/sayac.js) on two pages.
 //
 // The front page (#sayac): how many books every reader's Matbaa has set,
 // counting up when it comes into view; clicked, the genres open beneath it
@@ -284,8 +285,49 @@
     });
   }
 
+  // The browser version's files (uygulama/engine.json) fetched ahead into this
+  // browser's own cache, so the block opens a bench that is nearly ready
+  // rather than one still downloading. It starts when the visitor reaches for
+  // the block, or by itself once the page has loaded on a fast connection
+  // that has not asked to save data; once only. Nothing is sent.
+  var warming = false;
+  function drain(r) {
+    if (!r.ok || !r.body) return null;
+    var reader = r.body.getReader();
+    var pump = function () { return reader.read().then(function (c) { return c.done ? null : pump(); }); };
+    return pump();
+  }
+  function warm() {
+    if (warming || !window.fetch) return;
+    warming = true;
+    fetch("uygulama/engine.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (manifest) {
+        if (!manifest || !Array.isArray(manifest.files)) return null;
+        var queue = manifest.files.slice();
+        var next = function () {
+          var f = queue.shift();
+          return f ? fetch("uygulama/" + f.path, { priority: "low" }).then(drain).then(next) : null;
+        };
+        return Promise.all([next(), next()]);
+      })
+      .catch(function () {});
+  }
+
   var start = document.getElementById("baslat");
-  if (start) startPanel(start);
+  if (start) {
+    startPanel(start);
+    ["pointerenter", "focusin", "touchstart", "dragenter"].forEach(function (type) {
+      start.addEventListener(type, warm, { once: true, passive: true });
+    });
+    var conn = navigator.connection;
+    if (conn && !conn.saveData && conn.effectiveType === "4g"
+        && window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
+      var soon = function () { setTimeout(warm, 1500); };
+      if (document.readyState === "complete") soon();
+      else window.addEventListener("load", soon, { once: true });
+    }
+  }
 
   var box = document.getElementById("sayac");
   var page = document.getElementById("raf");

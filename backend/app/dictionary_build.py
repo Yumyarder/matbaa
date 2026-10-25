@@ -18,7 +18,7 @@ import time
 from collections import Counter
 from typing import Callable, Dict
 
-from app import dictionary
+from app import copy_control, dictionary
 from app.turkish_words import words
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
@@ -52,6 +52,8 @@ def projects_folder() -> str:
 def _pdf_words(path: str) -> Counter:
     import pymupdf as fitz
 
+    if copy_control.refusal(path):  # a book closed to copying gives no words either
+        return Counter()
     name = os.path.splitext(os.path.basename(path))[0]
     copies = sorted(glob.glob(os.path.join(OCR_CACHE, glob.escape(name) + "-*.pdf")), key=os.path.getmtime)
     source = copies[-1] if copies else path

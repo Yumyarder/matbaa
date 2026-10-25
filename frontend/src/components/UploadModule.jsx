@@ -3,10 +3,12 @@ import CounterPanel from "./CounterPanel.jsx";
 import RecentProjects from "./RecentProjects";
 import HasiyeStart from "./HasiyeStart.jsx";
 import { useUi } from "./UiSwitch.jsx";
-import { IN_BROWSER } from "../browser/engine.js";
+import { IN_BROWSER, useEngine } from "../browser/engine.js";
+import EngineStatus, { engineShare, engineText } from "../browser/EngineStatus.jsx";
 
 export default function UploadModule({ onFileSelected, isConverting, progress, error, onOpenProject, onOpenNotebook,
                                        onOpenLibrary }) {
+  const engine = useEngine();
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef(null);
   const hasiye = useUi() === "hasiye";
@@ -83,15 +85,19 @@ export default function UploadModule({ onFileSelected, isConverting, progress, e
             </div>
             <p className="dropzone__title">Akademik bir PDF'i buraya bırakın</p>
             <p className="dropzone__hint">ya da göz atmak için tıklayın — ~200MB'a kadar</p>
+            <EngineStatus />
           </>
         ) : (
           <div className="dropzone__progress">
             <p className="dropzone__title">Sayfalar taranıyor…</p>
             <div className="progress-bar">
-              <div className="progress-bar__fill" style={{ width: `${progress}%` }} />
+              <div className="progress-bar__fill"
+                   style={{ width: `${engine.ready ? (IN_BROWSER ? 100 : progress) : engineShare(engine)}%` }} />
             </div>
             <p className="dropzone__hint">
-              {progress < 100 ? `Yükleniyor — %${progress}` : "Sayfa küçük resimleri hazırlanıyor…"}
+              {/* in the browser the file goes nowhere: there is no upload to count */}
+              {!engine.ready ? engineText(engine, true)
+                : progress < 100 && !IN_BROWSER ? `Yükleniyor — %${progress}` : "Sayfa küçük resimleri hazırlanıyor…"}
             </p>
           </div>
         )}

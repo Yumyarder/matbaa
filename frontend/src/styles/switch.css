@@ -81,29 +81,20 @@
 :root[data-ui="gece"] .about__table th, :root[data-ui="gece"] .about__table td { text-align: left; padding: 5px 8px 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.09); vertical-align: top; }
 :root[data-ui="gece"] .about__table th { color: #f1ede4; font-weight: 500; }
 
-/* The browser build's boot screen (browser/BrowserBoot.jsx), shown while the
-   engine loads: the press's steps, one at a time. */
+/* The browser build's page for an engine that cannot run here at all
+   (browser/BrowserBoot.jsx): why, and the way back. */
 .boot { box-sizing: border-box; min-height: 100vh; max-width: 40rem; margin: 0 auto; padding: 18vh 24px 48px; }
 .boot__mark { margin: 0 0 2.5rem; font-size: 0.75rem; letter-spacing: 0.24em; text-transform: uppercase; }
 .boot__cross { display: inline-block; width: 11px; height: 11px; margin: 0 0.5em; vertical-align: middle;
   background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat,
               linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat; }
 .boot__title { margin: 0 0 1.5rem; font-size: 2.5rem; font-weight: 400; line-height: 1.1; }
-.boot__steps { list-style: none; margin: 0 0 2rem; padding: 0; }
-.boot__steps li { position: relative; padding: 0.45rem 0 0.45rem 1.75rem; font-size: 1.125rem; opacity: 0.45; }
-.boot__steps li::before { content: ""; position: absolute; left: 0; top: 50%; width: 0.75rem; height: 1px; background: currentColor; }
-.boot__steps li.is-done { opacity: 0.8; }
-.boot__steps li.is-now { opacity: 1; }
-.boot__steps li.is-now::before { width: 1rem; animation: boot-tick 1.2s ease-in-out infinite alternate; }
-@keyframes boot-tick { from { transform: scaleX(0.4); transform-origin: left; } to { transform: scaleX(1); transform-origin: left; } }
 .boot__text { max-width: 34rem; margin: 0 0 1rem; font-size: 1rem; line-height: 1.55; }
 .boot__detail { margin: 0 0 1rem; font-size: 0.8125rem; opacity: 0.7; word-break: break-word; }
-@media (prefers-reduced-motion: reduce) { .boot__steps li.is-now::before { animation: none; } }
 
 :root[data-ui="hasiye"] .boot { color: #1a1a1a; font-family: "EB Garamond", Garamond, "Times New Roman", serif; }
 :root[data-ui="hasiye"] body:has(.boot) { background: #f3eee3; }
-:root[data-ui="hasiye"] .boot__mark, :root[data-ui="hasiye"] .boot__steps li.is-now::before { color: #b0321f; }
-:root[data-ui="hasiye"] .boot__steps li.is-now { color: #1a1a1a; }
+:root[data-ui="hasiye"] .boot__mark { color: #b0321f; }
 :root[data-ui="hasiye"] .boot a { color: #b0321f; }
 :root[data-ui="gece"] .boot { color: #f1ede4; font-family: "Inter", sans-serif; }
 :root[data-ui="gece"] body:has(.boot) { background: #14171c; }
@@ -114,12 +105,6 @@
 :root[data-ui="hasiye"] .boot__button { border-color: #c23a2a; background: #c23a2a; color: #f3eee3; }
 :root[data-ui="hasiye"] .boot__button:hover { background: #a32c1c; }
 :root[data-ui="gece"] .boot__button { border-color: #c08e4f; color: #f1ede4; }
-.boot__bytes { margin-left: 0.75em; font-size: 0.875rem; font-variant-numeric: tabular-nums lining-nums; opacity: 0.75; }
-.boot__bar { height: 2px; max-width: 26rem; margin: -1rem 0 2rem; background: rgba(127, 127, 127, 0.25); }
-.boot__bar span { display: block; height: 100%; background: currentColor; transition: width 200ms linear; }
-.boot__quiet { font-style: italic; }
-:root[data-ui="hasiye"] .boot__bar span { background: #c23a2a; }
-:root[data-ui="gece"] .boot__bar span { background: #c08e4f; }
 
 /* a phone's width: the strip's notice takes a row of its own under the
    About link and the look switch, instead of a word a line between them */
@@ -127,3 +112,19 @@
   .ui-strip { flex-wrap: wrap; row-gap: 6px; }
   .ui-strip__notice { order: 3; flex-basis: 100%; max-width: none; }
 }
+
+/* The engine loading behind the app in the browser build
+   (browser/EngineStatus.jsx): one quiet line under the way to choose a PDF,
+   gone once the engine is up. */
+.engine-line { margin: 0.75rem 0 0; font-size: 0.875rem; line-height: 1.45; }
+.engine-line__text { font-variant-numeric: tabular-nums lining-nums; }
+.engine-line__bar { display: block; max-width: 18rem; height: 1px; margin-top: 0.45rem; background: rgba(127, 127, 127, 0.3); }
+.engine-line__bar span { display: block; height: 100%; transition: width 200ms linear; }
+.dropzone .engine-line__bar { margin-left: auto; margin-right: auto; }
+@media (prefers-reduced-motion: reduce) { .engine-line__bar span { transition: none; } }
+:root[data-ui="hasiye"] .engine-line { color: var(--ink-2); font-style: italic; }
+:root[data-ui="hasiye"] .engine-line__bar { background: var(--rule); }
+:root[data-ui="hasiye"] .engine-line__bar span { background: var(--red-ink); }
+:root[data-ui="gece"] .engine-line { color: #a9afb8; }
+:root[data-ui="gece"] .engine-line__note { color: #8a919b; }
+:root[data-ui="gece"] .engine-line__bar span { background: #c08e4f; }

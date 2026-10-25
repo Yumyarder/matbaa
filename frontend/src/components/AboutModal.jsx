@@ -53,7 +53,8 @@ export default function AboutModal({ onClose }) {
 
         <h3 className="about__head">Kitaplar</h3>
         <p className="about__text">Yalnız hakkına sahip olduğunuz kitapları dönüştürün. Matbaa kopya korumasını
-          (DRM) kırmaz; korumalı dosyaları açmaz.</p>
+          (DRM) kırmaz; korumalı dosyaları açmaz. Yayıncının metin kopyalamayı kapattığı ya da parolayla kilitlediği
+          PDF'leri de dönüştürmez.</p>
 
         <h3 className="about__head">Kaynak kodu</h3>
         <p className="about__text">Matbaa özgür yazılımdır: GNU Affero Genel Kamu Lisansı sürüm 3 (AGPL-3.0)
