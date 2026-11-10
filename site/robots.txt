@@ -1,3 +1,15 @@
-# While Matbaa is open to invited friends only, nothing here is for search engines.
+# Matbaa stays out of search engines (every page also says noindex). The
+# link-preview fetchers of chat and social apps may read the pages and the
+# share card (kart.png), so a shared link shows its card, not a bare address.
+User-agent: Twitterbot
+User-agent: facebookexternalhit
+User-agent: Facebot
+User-agent: WhatsApp
+User-agent: TelegramBot
+User-agent: LinkedInBot
+User-agent: Slackbot-LinkExpanding
+User-agent: Discordbot
+Allow: /
+
 User-agent: *
 Disallow: /

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Matbaa — paylaşım kartı</title>
+<!-- The share card (og:image, 1200x630): the front page's welcome set again
+     for a link preview from the site's own parts, not a crop of the page.
+     tools/make_share_card.py photographs it into site/kart.png. Everything
+     that must read in a phone's small preview sits well inside the middle
+     1080x600; the seal keeps to the corner, away from the name. -->
+<link rel="stylesheet" href="../site/site.css">
+<style>
+  html { font-size: 16px; }
+  body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+
+  .card { position: relative; box-sizing: border-box; width: 1200px; height: 630px; padding: 40px 64px 36px;
+    display: grid; grid-template-columns: 580px minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: 40px; }
+
+  /* the press's marks in the four corners */
+  .card > .cross { position: absolute; }
+  .card > .cross:nth-of-type(1) { top: 20px; left: 22px; }
+  .card > .cross:nth-of-type(2) { top: 20px; right: 22px; }
+  .card > .cross:nth-of-type(3) { bottom: 20px; left: 22px; }
+  .card > .cross:nth-of-type(4) { bottom: 20px; right: 22px; }
+
+  .card__head { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
+  .card__head .mark__name { font-size: 1.625rem; }
+  .card__head .mark__motto { font-size: 0.8125rem; }
+  .card__seal { display: block; width: 52px; height: 52px; }
+
+  .card__lead { align-self: center; padding-top: 6px; }
+  .card__lead h1 { margin: 0; font-size: 4.75rem; font-weight: 400; line-height: 1.02; letter-spacing: -0.015em; }
+
+  .card__start { max-width: 470px; aspect-ratio: auto; margin-top: 36px; padding: 26px 30px 24px; gap: 14px 24px; }
+  .card__start .start__title { font-size: 2.5rem; }
+  .card__start .start__text { font-size: 1.25rem; }
+  .card__start .start__sheet { width: 3rem; height: 3.9rem; }
+
+  .card__shelf { align-self: end; justify-content: flex-end; gap: 16px; padding: 0 0 22px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--rule-2); }
+  .card__shelf .tome { width: 130px; }
+  .card__shelf .tome:nth-child(2) { width: 150px; transform: translateY(-14px); }
+  .card__shelf .tome__label { font-size: 0.75rem; letter-spacing: 0.1em; }
+
+  .card__foot { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between;
+    padding-top: 14px; color: var(--ink-2); font-size: 1.25rem; }
+  .card__foot .caps { font-size: 0.9375rem; color: var(--red-ink); }
+  .card__foot em { font-style: italic; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <span class="cross" aria-hidden="true"></span>
+    <span class="cross" aria-hidden="true"></span>
+    <span class="cross" aria-hidden="true"></span>
+    <span class="cross" aria-hidden="true"></span>
+
+    <header class="card__head">
+      <span class="mark">
+        <span class="mark__name">Matbaa</span><span class="cross" aria-hidden="true"></span><span class="mark__motto">PDF'ten Kindle'a</span>
+      </span>
+      <img class="card__seal" src="muhur.svg" alt="">
+    </header>
+
+    <section class="card__lead">
+      <h1>Kitaplarınızı<br>Kindle'a dizin.</h1>
+      <div class="start card__start">
+        <span class="start__sheet" aria-hidden="true"></span>
+        <span class="start__title">Tarayıcıda başlayın</span>
+        <span class="start__text">PDF'inizi bırakın. Kurulum yok; kitap bilgisayarınızdan çıkmaz.</span>
+      </div>
+    </section>
+
+    <div class="shelf card__shelf" aria-hidden="true">
+      <span class="tome tome--bone"><span class="tome__label">Kürk Mantolu Madonna</span></span>
+      <span class="tome tome--rubric"><span class="tome__label">Suç ve Ceza</span></span>
+      <span class="tome tome--iron"><span class="tome__label">Sefiller</span></span>
+    </div>
+
+    <footer class="card__foot">
+      <span class="caps">matbaa.pages.dev</span>
+      <em>Ücretsiz ve açık kaynak.</em>
+    </footer>
+  </main>
+</body>
+</html>

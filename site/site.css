@@ -233,6 +233,10 @@ td:last-child { font-style: italic; color: var(--ink-2); }
 .foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; }
 .foot nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
 .foot p { margin: 0; max-width: 60ch; }
+/* the seal at the foot of every page, as a printer's device closes a book's
+   colophon; kept away from the running head, where its M sat beside the name's */
+.foot__device { flex-basis: 100%; display: flex; justify-content: center; padding-top: 1.25rem; }
+.foot__device img { display: block; width: 36px; height: 36px; }
 
 @media (max-width: 860px) {
   .hero { grid-template-columns: minmax(0, 1fr); padding-top: 2.5rem; }

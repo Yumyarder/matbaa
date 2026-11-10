@@ -1732,6 +1732,7 @@ body {
   border-bottom: 1px solid var(--rule);
 }
 .ed__mark { justify-self: center; display: flex; align-items: center; gap: var(--s-3); }
+.ed__seal { grid-column: 1; justify-self: start; width: 28px; height: 28px; }
 .ed__name {
   font-size: var(--t-lg);
   font-weight: 500;
@@ -1756,10 +1757,8 @@ body {
 .ed__links .ed__plus:hover .ed-cross { background:
   linear-gradient(var(--paper), var(--paper)) center / 100% 1px no-repeat,
   linear-gradient(var(--paper), var(--paper)) center / 1px 100% no-repeat; }
-.ed__head .ed-register--left { grid-column: 1; }
 .ed__head .ed-register--right { margin-left: var(--s-6); }
 .ed__head { grid-template-columns: 15.5rem 1fr auto auto; }
-.ed__head .ed-register--left { justify-self: start; }
 
 /* the contents down the left margin */
 .ed__side {
@@ -2211,6 +2210,8 @@ body {
   .ed__lead { grid-template-columns: minmax(0, 1fr); }
   .ed__rail { display: none; }
   .ed__links button:not(.ed__plus) { display: none; }
+  /* no room to keep the seal apart from the name; the tab's icon is the seal */
+  .ed__seal { display: none; }
   .ed__row { grid-auto-columns: minmax(16.25rem, 86%); }
 }
 

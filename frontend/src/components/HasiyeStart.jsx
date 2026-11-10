@@ -106,7 +106,9 @@ export default function HasiyeStart({ onFileSelected, isConverting, progress, er
              onChange={(e) => e.target.files?.[0] && onFileSelected(e.target.files[0])} />
 
       <header className="ed__head">
-        <Register corner="left" />
+        {/* the seal in the left corner, apart from the name so its M is not read
+            twice; public/favicon.svg is brand/muhur-32.svg, the cut drawn for this size */}
+        <img className="ed__seal" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width="28" height="28" />
         <div className="ed__mark">
           <span className="ed__name">Matbaa</span>
           <Cross />
